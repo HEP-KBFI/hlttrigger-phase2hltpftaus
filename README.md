@@ -1,2 +1,7 @@
 # hlttrigger-phase2hltpftaus-
 HLTTrigger/Phase2HLTPFTaus package for HL-HLC HLT tau trigger studies
+
+
+# To checkout the code:
+
+git clone https://github.com/HEP-KBFI/hlttrigger-phase2hltpftaus HLTTrigger/Phase2HLTPFTaus
