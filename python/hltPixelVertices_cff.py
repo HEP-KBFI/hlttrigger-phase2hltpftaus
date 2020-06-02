@@ -54,7 +54,14 @@ pixelTracksPPV = cms.EDProducer("PixelTrackProducer",
     mightGet = cms.untracked.vstring("")#'RegionsSeedingHitSets_pixelTracksHitQuadruplets__RECO')
 )
 
-process.hltPixelVertices = cms.EDProducer( "PixelVertexProducer",
+HLTPSetPvClusterComparerForIT = cms.PSet(
+    track_chi2_max = cms.double(20.0),
+    track_prob_min = cms.double(-1.0),
+    track_pt_max = cms.double(20.0),
+    track_pt_min = cms.double(1.0)
+)
+
+hltPixelVertices = cms.EDProducer( "PixelVertexProducer",
     WtAverage = cms.bool( True ),
     Method2 = cms.bool( True ),
     beamSpot = cms.InputTag( "offlineBeamSpot" ),
@@ -69,9 +76,9 @@ process.hltPixelVertices = cms.EDProducer( "PixelVertexProducer",
     ZSeparation = cms.double( 0.05 )
 )
 
-process.hltPixelVertexSequence = cms.Sequence(
-    process.hltPixelTracksTrackingRegions
-  + process.pixelTracksHitDoubletsPPV
+hltPixelVertexSequence = cms.Sequence(
+    hltPixelTracksTrackingRegions
+  + pixelTracksHitDoubletsPPV
   + pixelTracksHitQuadrupletsPPV
   + pixelTracksPPV
   + hltPixelVertices
