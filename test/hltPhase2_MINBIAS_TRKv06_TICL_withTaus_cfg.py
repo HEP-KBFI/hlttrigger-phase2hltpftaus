@@ -117,27 +117,26 @@ process.reconstruction_step = cms.Path(process.reconstruction)
 
 # Output definition
 process.RECOoutput = cms.OutputModule("PoolOutputModule",
-                                      fastCloning = cms.untracked.bool(False),
-                                      fileName = cms.untracked.string('step3_RAW2DIGI_RECO.root'),
-                                      SelectEvents = cms.untracked.PSet(
-                                          SelectEvents = cms.vstring('reconstruction_step')
-                                      ),
-                                      outputCommands = cms.untracked.vstring(
-                                          'drop *',
-                                          'keep *_ak4GenJets*_*_*',              ## PRESENT ONLY IN RAW
-                                          'keep *_hltGtStage2Digis*_*_*',        ## PRESENT ONLY IN RAW
-                                          'keep *_hltTriggerSummaryRAW*_*_*',    ## PRESENT ONLY IN RAW
-                                          'keep *_ak4PFJetsCorrected*_*_*',          ## PRESENT ONLY IN MINIAOD/RECO
-                                          'keep recoPFTaus_*_*_*',                   ## PRESENT ONLY IN MINIAOD/RECO
-                                          'keep *_tauGenJetsSelectorAllHadrons_*_*', ## PRESENT ONLY IN MINIAOD/RECO
-                                          'keep *_ak4GenJets_*_*',                   ## PRESENT ONLY IN MINIAOD/RECO
-                                          'keep *_ak8GenJets_*_*',                   ## PRESENT ONLY IN MINIAOD/RECO
-                                          'keep *_slimmedGenJets__*',                ## PRESENT ONLY IN MINIAOD/RECO
-                                          'keep *_slimmedTaus_*_*',                  ## PRESENT ONLY IN MINIAOD/RECO
-                                          'keep *_slimmedJets_*_*'                   ## PRESENT ONLY IN MINIAOD/RECO
-                                      )
+    fastCloning = cms.untracked.bool(False),
+    fileName = cms.untracked.string('step3_RAW2DIGI_RECO.root'),
+    SelectEvents = cms.untracked.PSet(
+        SelectEvents = cms.vstring('reconstruction_step')
+    ),
+    outputCommands = cms.untracked.vstring(
+        'drop *',
+        'keep *_ak4GenJets*_*_*',                  ## PRESENT ONLY IN RAW
+        'keep *_hltGtStage2Digis*_*_*',            ## PRESENT ONLY IN RAW
+        'keep *_hltTriggerSummaryRAW*_*_*',        ## PRESENT ONLY IN RAW
+        'keep *_ak4PFJetsCorrected*_*_*',          ## PRESENT ONLY IN MINIAOD/RECO
+        'keep *_hlt*Tau*_*_*',                     ## PRODUCED BY addHLTPFTaus FUNCTION BELOW
+        'keep *_tauGenJetsSelectorAllHadrons_*_*', ## PRESENT ONLY IN MINIAOD/RECO
+        'keep *_ak4GenJets_*_*',                   ## PRESENT ONLY IN MINIAOD/RECO
+        'keep *_ak8GenJets_*_*',                   ## PRESENT ONLY IN MINIAOD/RECO
+        'keep *_slimmedGenJets__*',                ## PRESENT ONLY IN MINIAOD/RECO
+        'keep *_slimmedTaus_*_*',                  ## PRESENT ONLY IN MINIAOD/RECO
+        'keep *_slimmedJets_*_*'                   ## PRESENT ONLY IN MINIAOD/RECO
+    )
 )
-
 
 process.RECOoutput_step = cms.EndPath(process.RECOoutput)
 process.endjob_step = cms.EndPath(process.endOfProcess)
