@@ -69,9 +69,6 @@ process.source = cms.Source("PoolSource",
     )
 )
 
-
-
-
 process.options = cms.untracked.PSet(
     FailPath = cms.untracked.vstring(),
     IgnoreCompletely = cms.untracked.vstring(),
@@ -106,7 +103,6 @@ process.configurationMetadata = cms.untracked.PSet(
     version = cms.untracked.string('$Revision: 1.19 $')
 )
 
-
 # Other statements
 from Configuration.AlCa.GlobalTag import GlobalTag
 process.GlobalTag = GlobalTag(process.GlobalTag, 'auto:phase2_realistic_T15', '')
@@ -133,7 +129,8 @@ process.RECOoutput = cms.OutputModule("PoolOutputModule",
         'keep *_electronGsfTracks_*_*',             ## KEEP REFERENCE TO reco::PFCandidate COLLECTION GIVEN AS INPUT TO addHLTPFTaus FUNCTION
         'keep *_generalTracks_*_*',                 ## KEEP REFERENCE TO reco::PFCandidate COLLECTION GIVEN AS INPUT TO addHLTPFTaus FUNCTION
         'keep *_offlinePrimaryVertices_*_*',        ## KEEP REFERENCE TO reco::PFCandidate COLLECTION GIVEN AS INPUT TO addHLTPFTaus FUNCTION
-        'keep *_hltPixelVertices_*_*',              ## PRODUCED BELOW
+        'keep *_hltPhase2PixelVertices_*_*',        ## PRODUCED BELOW
+        'keep *_hltPhase2TrimmedPixelVertices_*_*', ## PRODUCED BELOW
         'keep *_hltKT6PFJets_*_*',                  ## PRODUCED BELOW
         'keep *_prunedGenParticles_*_*',            ## PRESENT ONLY IN MINIAOD/RECO
         'keep *_ak4GenJets_*_*',                    ## PRESENT ONLY IN MINIAOD/RECO
@@ -194,23 +191,23 @@ process = customize_hltPhase2_TICL(process)
 process.taucustomreco = cms.Sequence()
 
 # run HLT Pixel vertex reconstruction
-##process.load("HLTTrigger.Phase2HLTPFTaus.hltPixelVertices_cff")
-##process.taucustomreco += process.itLocalReco
-##process.taucustomreco += process.siPixelClustersPreSplitting
-##process.taucustomreco += process.siPixelRecHitsPreSplitting
-##process.taucustomreco += process.siPixelClusterShapeCachePreSplitting
-##process.taucustomreco += process.hltPixelVertices
+process.load("HLTTrigger.Phase2HLTPFTaus.hltPixelVertices_cff")
+process.taucustomreco += process.hltPhase2PixelTracksSequence
+process.taucustomreco += process.hltPhase2PixelVerticesSequence
+
+##process.load("HLTTrigger.Phase2HLTPFTaus.MC_Tracking_v6_cff")
+##process.taucustomreco += process.hltPhase2PixelTracksSequence
+##process.taucustomreco += process.hltPhase2PixelVerticesSequence
 
 # run HLT tau reconstruction
 from HLTTrigger.Phase2HLTPFTaus.tools.addHLTPFTaus import addHLTPFTaus
 srcPFCandidates = "particleFlowTmp"
 for algorithm in [ "hps", "shrinking-cone" ]:
-    ##for srcVertices in [ "offlinePrimaryVertices", "hltPixelVertices" ]:
-    for srcVertices in [ "offlinePrimaryVertices" ]:
+    for srcVertices in [ "offlinePrimaryVertices", "hltPhase2PixelVertices" ]:
         suffix = None
         if srcVertices == "offlinePrimaryVertices":
             suffix = "WithOfflineVertices"
-        elif srcVertices == "hltPixelVertices":
+        elif srcVertices == "hltPhase2PixelVertices":
             suffix = "WithOnlineVertices"
         else:
             raise ValueError("Invalid parameter srcVertices = '%s' !!" % srcVertices)
