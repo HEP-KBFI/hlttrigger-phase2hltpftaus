@@ -14,7 +14,6 @@ from RecoTauTag.RecoTau.RecoTauCleaner_cfi import RecoTauCleaner
 import RecoTauTag.RecoTau.RecoTauCleanerPlugins as cleaners
 from RecoTauTag.RecoTau.RecoTauPiZeroUnembedder_cfi import RecoTauPiZeroUnembedder
 from RecoTauTag.RecoTau.PFRecoTauDiscriminationByLeadingObjectPtCut_cfi import pfRecoTauDiscriminationByLeadingObjectPtCut
-from RecoTauTag.RecoTau.PFRecoTauDiscriminationByIsolation_cfi import pfRecoTauDiscriminationByIsolation
 from RecoTauTag.RecoTau.TauDiscriminatorTools import noPrediscriminants
 
 #--------------------------------------------------------------------------------
@@ -56,10 +55,16 @@ def addPFTauSelector(process, selectorName, srcPFTaus, pftauDiscriminators, pfta
 
 def addHLTPFTaus(process, algorithm, srcPFCandidates, srcVertices, suffix = ""):
     pfTauLabel = None
+    signalConeSize = None
+    isolationConeSize = None
     if algorithm == "shrinking-cone":
         pfTauLabel = "PFTau"
+        signalConeSize = signalConeSize_sc
+        isolationConeSize = isolationConeSize_sc
     elif algorithm == "hps":
         pfTauLabel = "HpsPFTau"
+        signalConeSize = signalConeSize_hps
+        isolationConeSize = isolationConeSize_hps
     else:
         raise ValueError("Invalid parameter algorithm = '%s' !!" % algorithm)
 
@@ -126,15 +131,15 @@ def addHLTPFTaus(process, algorithm, srcPFCandidates, srcVertices, suffix = ""):
                 pfCandSrc = cms.InputTag(srcPFCandidates),
                 usePFLeptons = cms.bool(True),
                 leadObjectPt = cms.double(minSignalTrackPt),
-                signalConeChargedHadrons = cms.string(signalConeSize_sc),
+                signalConeChargedHadrons = cms.string(signalConeSize),
                 maxSignalConeChargedHadrons = cms.int32(3),
                 signalConeNeutralHadrons = cms.string("0.1"),
                 signalConePiZeros = cms.string(signalConeSize_sc),                
                 minAbsPhotonSumPt_insideSignalCone = cms.double(2.5),
                 minRelPhotonSumPt_insideSignalCone = cms.double(0.1),
-                isoConeChargedHadrons = cms.string("%1.2f" % isolationConeSize_sc),
-                isoConeNeutralHadrons = cms.string("%1.2f" % isolationConeSize_sc),
-                isoConePiZeros = cms.string("%1.2f" % isolationConeSize_sc),
+                isoConeChargedHadrons = cms.string("%1.2f" % isolationConeSize),
+                isoConeNeutralHadrons = cms.string("%1.2f" % isolationConeSize),
+                isoConePiZeros = cms.string("%1.2f" % isolationConeSize),
                 qualityCuts = hltQualityCuts,
             )),
             modifiers = cms.VPSet()
@@ -273,19 +278,54 @@ def addHLTPFTaus(process, algorithm, srcPFCandidates, srcVertices, suffix = ""):
     srcSelectedPFTaus = hltSelectedPFTaus.label()
 
     # CV: do not cut on charged isolation, but store charged isolation pT-sum in output file instead
-    hltPFTauChargedIsolation = addPFTauDiscriminator(process, "hlt%sChargedIsolation%s" % (pfTauLabel, suffix),
-        pfRecoTauDiscriminationByIsolation.clone(             
+    hltPFTauChargedIsoPtSum = addPFTauDiscriminator(process, "hlt%sChargedIsoPtSum%s" % (pfTauLabel, suffix),
+        cms.EDProducer("PFRecoTauDiscriminationByIsolation",
             PFTauProducer = cms.InputTag(srcSelectedPFTaus),
             particleFlowSrc = cms.InputTag(srcPFCandidates),
             vertexSrc = cms.InputTag(srcVertices),
             qualityCuts = hltQualityCuts,
             Prediscriminants = noPrediscriminants,
-            IDdefinitions = cms.VPSet(cms.PSet(
-                IDname = cms.string("ChargedIsoPtSum"),
-                ApplyDiscriminationByTrackerIsolation = cms.bool(True),
-                storeRawSumPt = cms.bool(True)
-            )),
-            IDWPdefinitions = cms.VPSet()
+            ApplyDiscriminationByTrackerIsolation = cms.bool(True),
+            ApplyDiscriminationByECALIsolation = cms.bool(False),
+            ApplyDiscriminationByWeightedECALIsolation = cms.bool(False),
+            WeightECALIsolation = cms.double(1.),
+            minTauPtForNoIso = cms.double(-99.),
+            applyOccupancyCut = cms.bool(False),
+            maximumOccupancy = cms.uint32(0),
+            applySumPtCut = cms.bool(False),
+            maximumSumPtCut = cms.double(-1.),
+            applyRelativeSumPtCut = cms.bool(False),
+            relativeSumPtCut = cms.double(-1.),
+            relativeSumPtOffset = cms.double(0.),
+            storeRawOccupancy = cms.bool(False),
+            storeRawSumPt = cms.bool(True),
+            storeRawPUsumPt = cms.bool(False),
+            storeRawFootprintCorrection = cms.bool(False),
+            storeRawPhotonSumPt_outsideSignalCone = cms.bool(False),
+            customOuterCone = cms.double(-1.),
+            applyPhotonPtSumOutsideSignalConeCut = cms.bool(False),
+            maxAbsPhotonSumPt_outsideSignalCone = cms.double(1.e+9),
+            maxRelPhotonSumPt_outsideSignalCone = cms.double(0.1),
+            applyFootprintCorrection = cms.bool(False),
+            footprintCorrections = cms.VPSet(),
+            applyDeltaBetaCorrection = cms.bool(False),
+            deltaBetaPUTrackPtCutOverride = cms.bool(False),
+            deltaBetaPUTrackPtCutOverride_val = cms.double(0.5),
+            isoConeSizeForDeltaBeta = cms.double(isolationConeSize),
+            deltaBetaFactor = cms.string("0.38"),
+            applyRhoCorrection = cms.bool(False),
+            rhoProducer = cms.InputTag("NotUsed"),
+            rhoConeSize = cms.double(0.357),
+            rhoUEOffsetCorrection = cms.double(0.),
+            UseAllPFCandsForWeights = cms.bool(False),
+            verbosity = cms.int32(0)
+        ),
+        pftauDiscriminators, pftauSequence)
+
+    hltPFTauNeutralIsoPtSum = addPFTauDiscriminator(process, "hlt%sNeutralIsoPtSum%s" % (pfTauLabel, suffix),
+        hltPFTauChargedIsoPtSum.clone(
+            ApplyDiscriminationByTrackerIsolation = cms.bool(False),
+            ApplyDiscriminationByECALIsolation = cms.bool(True)
         ),
         pftauDiscriminators, pftauSequence)
 

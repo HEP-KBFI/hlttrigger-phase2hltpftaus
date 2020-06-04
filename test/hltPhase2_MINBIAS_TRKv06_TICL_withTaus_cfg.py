@@ -124,17 +124,26 @@ process.RECOoutput = cms.OutputModule("PoolOutputModule",
     ),
     outputCommands = cms.untracked.vstring(
         'drop *',
-        'keep *_ak4GenJets*_*_*',                  ## PRESENT ONLY IN RAW
-        'keep *_hltGtStage2Digis*_*_*',            ## PRESENT ONLY IN RAW
-        'keep *_hltTriggerSummaryRAW*_*_*',        ## PRESENT ONLY IN RAW
-        'keep *_ak4PFJetsCorrected*_*_*',          ## PRESENT ONLY IN MINIAOD/RECO
-        'keep *_hlt*Tau*_*_*',                     ## PRODUCED BY addHLTPFTaus FUNCTION BELOW
-        'keep *_tauGenJetsSelectorAllHadrons_*_*', ## PRESENT ONLY IN MINIAOD/RECO
-        'keep *_ak4GenJets_*_*',                   ## PRESENT ONLY IN MINIAOD/RECO
-        'keep *_ak8GenJets_*_*',                   ## PRESENT ONLY IN MINIAOD/RECO
-        'keep *_slimmedGenJets__*',                ## PRESENT ONLY IN MINIAOD/RECO
-        'keep *_slimmedTaus_*_*',                  ## PRESENT ONLY IN MINIAOD/RECO
-        'keep *_slimmedJets_*_*'                   ## PRESENT ONLY IN MINIAOD/RECO
+        'keep *_ak4GenJets*_*_*',                   ## PRESENT ONLY IN RAW
+        'keep *_hltGtStage2Digis*_*_*',             ## PRESENT ONLY IN RAW
+        'keep *_hltTriggerSummaryRAW*_*_*',         ## PRESENT ONLY IN RAW
+        'keep *_ak4PFJetsCorrected*_*_*',           ## PRESENT ONLY IN MINIAOD/RECO
+        'keep *_hlt*Tau*_*_*',                      ## PRODUCED BY addHLTPFTaus FUNCTION BELOW
+        'keep *_particleFlowTmp_*_*',               ## KEEP REFERENCE TO reco::PFCandidate COLLECTION GIVEN AS INPUT TO addHLTPFTaus FUNCTION
+        'keep *_electronGsfTracks_*_*',             ## KEEP REFERENCE TO reco::PFCandidate COLLECTION GIVEN AS INPUT TO addHLTPFTaus FUNCTION
+        'keep *_generalTracks_*_*',                 ## KEEP REFERENCE TO reco::PFCandidate COLLECTION GIVEN AS INPUT TO addHLTPFTaus FUNCTION
+        'keep *_offlinePrimaryVertices_*_*',        ## KEEP REFERENCE TO reco::PFCandidate COLLECTION GIVEN AS INPUT TO addHLTPFTaus FUNCTION
+        'keep *_hltPixelVertices_*_*',              ## PRODUCED BELOW
+        'keep *_hltKT6PFJets_*_*',                  ## PRODUCED BELOW
+        'keep *_prunedGenParticles_*_*',            ## PRESENT ONLY IN MINIAOD/RECO
+        'keep *_ak4GenJets_*_*',                    ## PRESENT ONLY IN MINIAOD/RECO
+        'keep *_ak8GenJets_*_*',                    ## PRESENT ONLY IN MINIAOD/RECO
+        'keep *_slimmedGenJets__*',                 ## PRESENT ONLY IN MINIAOD/RECO
+        'keep *_slimmedTaus_*_*',                   ## PRESENT ONLY IN MINIAOD/RECO
+        'keep *_slimmedJets_*_*',                   ## PRESENT ONLY IN MINIAOD/RECO
+        'keep *_packedPFCandidates_*_*',            ## PRESENT ONLY IN MINIAOD/RECO
+        'keep *_slimmedAddPileupInfo_*_*',          ## PRESENT ONLY IN MINIAOD/RECO
+        'keep *_offlineSlimmedPrimaryVertices_*_*', ## PRESENT ONLY IN MINIAOD/RECO
     )
 )
 
@@ -204,11 +213,19 @@ for algorithm in [ "hps", "shrinking-cone" ]:
         elif srcVertices == "hltPixelVertices":
             suffix = "WithOnlineVertices"
         else:
-            raise ValueError("Invalid parameter srcPixelVertices = '%s' !!" % srcPixelVertices)
+            raise ValueError("Invalid parameter srcVertices = '%s' !!" % srcVertices)
         pftauSequence = addHLTPFTaus(process, algorithm, srcPFCandidates, srcVertices, suffix)
         process.taucustomreco += pftauSequence
 
 process.reconstruction += process.taucustomreco
+
+# CV: add kt6PFJets for rho computation
+from RecoJets.JetProducers.kt6PFJets_cfi import kt6PFJets
+process.hltKT6PFJets = kt6PFJets.clone(
+    src = cms.InputTag("particleFlowTmp"),
+    doRhoFastjet = cms.bool(True)
+)
+process.reconstruction += process.hltKT6PFJets
 #--------------------------------------------------------------------------------
 
 # End of customisation functions
