@@ -24,14 +24,20 @@ from RecoTauTag.RecoTau.TauDiscriminatorTools import noPrediscriminants
 #     Both thresholds are set to pT > 0.9 by default, motivated by this presentation
 #       https://indico.cern.ch/event/921383/contributions/3879407/attachments/2044996/3426284/200526_hltupg_jme.pdf
 #    (cf. "TRK v6" and "TRK v6 + skimTrk" on slides 3 and 5)
-minSignalTrackPt      = 0.9
-minIsolationTrackPt   = 0.9
+minSignalTrackPt      =  0.9
+minIsolationTrackPt   =  0.9
 
 signalConeSize_hps    = "min(max(3.6/pt(), 0.08), 0.12)"
 signalConeSize_sc     = "min(max(3.6/pt(), 0.08), 0.12)"
 
-isolationConeSize_hps = 0.5
-isolationConeSize_sc  = 0.5
+isolationConeSize_hps =  0.5
+isolationConeSize_sc  =  0.5
+
+minSeedJetPt          = 14.0
+maxSeedJetAbsEta      =  4.0
+
+minTauPt              = 15.0
+maxTauAbsEta          =  3.0
 #--------------------------------------------------------------------------------
 
 def addPFTauDiscriminator(process, discriminatorName, discriminator, pftauDiscriminators, pftauSequence):
@@ -43,7 +49,7 @@ def addPFTauDiscriminator(process, discriminatorName, discriminator, pftauDiscri
 def addPFTauSelector(process, selectorName, srcPFTaus, pftauDiscriminators, pftauSequence):
     selector = cms.EDFilter("PFTauSelector",
         src = cms.InputTag(srcPFTaus),
-        cut = cms.string("pt > 15.0 & abs(eta) < 2.1"),  
+        cut = cms.string("pt > %1.2f & abs(eta) < %1.2f" % (minTauPt, maxTauAbsEta)),  
         discriminators = cms.VPSet([ cms.PSet( 
             discriminator = cms.InputTag(pftauDiscriminator), 
             selectionCut = cms.double(0.5) 
@@ -85,7 +91,9 @@ def addHLTPFTaus(process, algorithm, srcPFCandidates, srcVertices, suffix = ""):
 
     hltPFTau08Region = RecoTauJetRegionProducer.clone(
         src = cms.InputTag(srcPFTauAK4PFJets),
-        pfCandSrc = cms.InputTag(srcPFCandidates)
+        pfCandSrc = cms.InputTag(srcPFCandidates),
+        minJetPt = cms.double(minSeedJetPt),
+        maxJetAbsEta = cms.double(maxSeedJetAbsEta)
     )
     srcPFTau08Region = "hlt%sPFJets08Region%s" % (pfTauLabel, suffix)
     setattr(process, srcPFTau08Region, hltPFTau08Region)
@@ -93,8 +101,8 @@ def addHLTPFTaus(process, algorithm, srcPFCandidates, srcVertices, suffix = ""):
 
     hltPFTauPFJetsRecoTauChargedHadrons = ak4PFJetsRecoTauChargedHadrons.clone(
         jetSrc = cms.InputTag(srcPFTauAK4PFJets),
-        minJetPt = cms.double(15.0),
-        maxJetAbsEta = cms.double(2.5),
+        minJetPt = cms.double(minSeedJetPt),
+        maxJetAbsEta = cms.double(maxSeedJetAbsEta),
         outputSelection = cms.string('pt > %1.2f' % minSignalTrackPt),
         builders = cms.VPSet(
             builders.chargedPFCandidates
@@ -108,7 +116,9 @@ def addHLTPFTaus(process, algorithm, srcPFCandidates, srcVertices, suffix = ""):
     pftauSequence += hltPFTauPFJetsRecoTauChargedHadrons
 
     hltPFTauPiZeros = ak4PFJetsLegacyHPSPiZeros.clone(
-        jetSrc = cms.InputTag(srcPFTauAK4PFJets)
+        jetSrc = cms.InputTag(srcPFTauAK4PFJets),
+        minJetPt = cms.double(minSeedJetPt),
+        maxJetAbsEta = cms.double(maxSeedJetAbsEta)
     )
     hltPFTauPiZeros.builders[0].qualityCuts = hltQualityCuts
     srcPFTauPiZeros = "hlt%sPiZeros%s" % (pfTauLabel, suffix)
@@ -119,8 +129,8 @@ def addHLTPFTaus(process, algorithm, srcPFCandidates, srcVertices, suffix = ""):
     if algorithm == "shrinking-cone":
         hltPFTausSansRef = combinatoricRecoTaus.clone(      
             jetSrc = cms.InputTag(srcPFTauAK4PFJets),
-            minJetPt = cms.double(15.0),
-            maxJetAbsEta = cms.double(2.5),
+            minJetPt = cms.double(minSeedJetPt),
+            maxJetAbsEta = cms.double(maxSeedJetAbsEta),
             jetRegionSrc = cms.InputTag(srcPFTau08Region),
             chargedHadronSrc = cms.InputTag(srcPFTauPFJetsRecoTauChargedHadrons),
             piZeroSrc = cms.InputTag(srcPFTauPiZeros),
@@ -151,8 +161,8 @@ def addHLTPFTaus(process, algorithm, srcPFCandidates, srcVertices, suffix = ""):
     elif algorithm == "hps":
         hltCombinatoricRecoTaus = combinatoricRecoTaus.clone(      
             jetSrc = cms.InputTag(srcPFTauAK4PFJets),
-            minJetPt = cms.double(15.0),
-            maxJetAbsEta = cms.double(2.5),
+            minJetPt = cms.double(minSeedJetPt),
+            maxJetAbsEta = cms.double(maxSeedJetAbsEta),
             jetRegionSrc = cms.InputTag(srcPFTau08Region),
             chargedHadronSrc = cms.InputTag(srcPFTauPFJetsRecoTauChargedHadrons),
             piZeroSrc = cms.InputTag(srcPFTauPiZeros),
