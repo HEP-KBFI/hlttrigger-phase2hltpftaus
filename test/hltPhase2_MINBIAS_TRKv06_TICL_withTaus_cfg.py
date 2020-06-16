@@ -225,6 +225,10 @@ process.hltKT6PFJets = kt6PFJets.clone(
     doRhoFastjet = cms.bool(True)
 )
 process.reconstruction += process.hltKT6PFJets
+
+process.options = cms.untracked.PSet(
+    wantSummary = cms.untracked.bool(True)
+)
 #--------------------------------------------------------------------------------
 
 # End of customisation functions
