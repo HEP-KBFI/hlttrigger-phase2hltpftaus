@@ -91,7 +91,7 @@ process.options = cms.untracked.PSet(
     numberOfStreams = cms.untracked.uint32(8),
     numberOfThreads = cms.untracked.uint32(8),
     printDependencies = cms.untracked.bool(False),
-    sizeOfStackForThreadsInKB = cms.optional.untracked.uint32,
+    #sizeOfStackForThreadsInKB = cms.optional.untracked.uint32,
     throwIfIllegalParameter = cms.untracked.bool(True),
     wantSummary = cms.untracked.bool(True)
 )
@@ -244,11 +244,6 @@ process = customiseEarlyDelete(process)
 process.options.numberOfThreads=cms.untracked.uint32(8)
 process.options.numberOfStreams=cms.untracked.uint32(8)
 process.options.numberOfConcurrentLuminosityBlocks=cms.untracked.uint32(1)
-
-
-
-
-
 
 
 
