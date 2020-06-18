@@ -219,18 +219,16 @@ process.taucustomreco = cms.Sequence()
 from HLTTrigger.Phase2HLTPFTaus.tools.addHLTPFTaus import addHLTPFTaus
 srcPFCandidates = "particleFlowTmp"
 for algorithm in [ "hps", "shrinking-cone" ]:
-    for srcVertices in [ "offlinePrimaryVertices", "hltPhase2PixelVertices", "hltPhase2TrimmedPixelVertices" ]:
-        suffix = None
-        if srcVertices == "offlinePrimaryVertices":
-            suffix = "WithOfflineVertices"
-        elif srcVertices == "hltPhase2PixelVertices":
-            suffix = "WithOnlineVertices"
-        elif srcVertices == "hltPhase2TrimmedPixelVertices":
-            suffix = "WithOnlineVerticesTrimmed"
-        else:
-            raise ValueError("Invalid parameter srcVertices = '%s' !!" % srcVertices)
-        pftauSequence = addHLTPFTaus(process, algorithm, srcPFCandidates, srcVertices, suffix)
-        process.taucustomreco += pftauSequence
+    if srcVertices == "offlinePrimaryVertices":
+        suffix = "WithOfflineVertices"
+    elif srcVertices == "hltPhase2PixelVertices":
+        suffix = "WithOnlineVertices"
+    elif srcVertices == "hltPhase2TrimmedPixelVertices":
+        suffix = "WithOnlineVerticesTrimmed"
+    else:
+        raise ValueError("Invalid parameter srcVertices = '%s' !!" % srcVertices)
+    pftauSequence = addHLTPFTaus(process, algorithm, srcPFCandidates, srcVertices, suffix)
+    process.taucustomreco += pftauSequence
 
 process.reconstruction += process.taucustomreco
 
