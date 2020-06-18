@@ -22,6 +22,24 @@ process.load('Configuration.StandardSequences.Reconstruction_cff')
 process.load('Configuration.StandardSequences.EndOfProcess_cff')
 process.load('Configuration.StandardSequences.FrontierConditions_GlobalTag_cff')
 
+#--------------------------------------------------------------------------------
+# CV: switch between offline-like and Pixel vertices
+
+#vertices = "OfflineVertices"
+vertices = "OnlineVertices"
+#vertices = "OnlineVerticesTrimmed"
+
+srcVertices = None
+if vertices == "OfflineVertices":
+    srcVertices = "offlinePrimaryVertices"
+elif vertices == "OnlineVertices":
+    srcVertices = "hltPhase2PixelVertices"
+elif vertices == "OnlineVerticesTrimmed":
+    srcVertices = "hltPhase2TrimmedPixelVertices"
+else:
+    raise ValueError("Invalid configuration parameter vertices = '%s' !!" % vertices)
+#--------------------------------------------------------------------------------
+
 process.maxEvents = cms.untracked.PSet(
     input = cms.untracked.int32(20),
     output = cms.optional.untracked.allowed(cms.int32,cms.PSet)
@@ -182,17 +200,20 @@ process = customize_hltPhase2_JME(process)
 process = customize_hltPhase2_TICL(process)
 
 #--------------------------------------------------------------------------------
+# CV: run HLT Pixel vertex reconstruction
+process.load("HLTTrigger.Phase2HLTPFTaus.hltPixelVertices_cff")
+process.reconstruction_step.replace(process.offlinePrimaryVertices, process.offlinePrimaryVertices + process.hltPhase2PixelTracksSequence + process.hltPhase2PixelVerticesSequence)
+
+# CV: switch vertex collection in particle-flow algorithm
+if srcVertices != "offlinePrimaryVertices":
+    print("Switching all vertex-related InputTags in 'reconstruction_step' path from '%s' to '%s'..." % ('offlinePrimaryVertices', srcVertices))
+    from FWCore.ParameterSet.MassReplace import massSearchReplaceAnyInputTag
+    massSearchReplaceAnyInputTag(process.reconstruction_step, 'offlinePrimaryVertices', srcVertices)
+#--------------------------------------------------------------------------------
+
+#--------------------------------------------------------------------------------
 # CV: add HLT tau reconstruction
 process.taucustomreco = cms.Sequence()
-
-# run HLT Pixel vertex reconstruction
-process.load("HLTTrigger.Phase2HLTPFTaus.hltPixelVertices_cff")
-process.taucustomreco += process.hltPhase2PixelTracksSequence
-process.taucustomreco += process.hltPhase2PixelVerticesSequence
-
-##process.load("HLTTrigger.Phase2HLTPFTaus.MC_Tracking_v6_cff")
-##process.taucustomreco += process.hltPhase2PixelTracksSequence
-##process.taucustomreco += process.hltPhase2PixelVerticesSequence
 
 # run HLT tau reconstruction
 from HLTTrigger.Phase2HLTPFTaus.tools.addHLTPFTaus import addHLTPFTaus
