@@ -59,7 +59,9 @@ def addPFTauSelector(process, selectorName, srcPFTaus, pftauDiscriminators, pfta
     pftauSequence += selector
     return selector
 
-def addHLTPFTaus(process, algorithm, srcPFCandidates, srcVertices, suffix = ""):
+def addHLTPFTaus(process, algorithm, srcPFCandidates, srcVertices, 
+                 isolation_maxDeltaZ, isolation_maxDeltaZToLeadTrack, isolation_minTrackHits, 
+                 suffix = ""):
     pfTauLabel = None
     signalConeSize = None
     isolationConeSize = None
@@ -79,6 +81,9 @@ def addHLTPFTaus(process, algorithm, srcPFCandidates, srcVertices, suffix = ""):
     hltQualityCuts = PFTauQualityCuts.clone()
     hltQualityCuts.signalQualityCuts.minTrackPt = cms.double(minSignalTrackPt)
     hltQualityCuts.isolationQualityCuts.minTrackPt = cms.double(minIsolationTrackPt)
+    hltQualityCuts.isolationQualityCuts.maxDeltaZ = cms.double(isolation_maxDeltaZ)
+    hltQualityCuts.isolationQualityCuts.maxDeltaZToLeadTrack = cms.double(isolation_maxDeltaZToLeadTrack)
+    hltQualityCuts.isolationQualityCuts.minTrackHits = cms.uint32(isolation_minTrackHits)
     hltQualityCuts.primaryVertexSrc = cms.InputTag(srcVertices)
 
     hltPFTauAK4PFJets = ak4PFJets.clone(
