@@ -25,6 +25,8 @@ from RecoTauTag.RecoTau.TauDiscriminatorTools import noPrediscriminants
 #       https://indico.cern.ch/event/921383/contributions/3879407/attachments/2044996/3426284/200526_hltupg_jme.pdf
 #    (cf. "TRK v6" and "TRK v6 + skimTrk" on slides 3 and 5)
 minSignalTrackPt      =  0.9
+##minLeadTrackPt        =  5.0
+minLeadTrackPt        =  1.0
 minIsolationTrackPt   =  0.9
 
 signalConeSize_hps    = "min(max(3.6/pt(), 0.08), 0.12)"
@@ -276,14 +278,14 @@ def addHLTPFTaus(process, algorithm, srcPFCandidates, srcVertices,
         srcPFTaus,
         pftauDiscriminators, pftauSequence)
 
-    hltPFTauDiscriminatorByTrackPtGt5 = addPFTauDiscriminator(process, "hlt%sDiscriminatorByTrackPtGt5%s" % (pfTauLabel, suffix),
+    hltPFTauDiscriminatorByTrackPt = addPFTauDiscriminator(process, "hlt%sDiscriminatorByTrackPt%s" % (pfTauLabel, suffix),
         pfRecoTauDiscriminationByLeadingObjectPtCut.clone(
             PFTauProducer = cms.InputTag(srcPFTaus),
             UseOnlyChargedHadrons = cms.bool(True),
-            MinPtLeadingObject = cms.double(5.0)
+            MinPtLeadingObject = cms.double(minLeadTrackPt)
         ),
         pftauDiscriminators, pftauSequence)
-    hltPFTausPassingTrackPtGt5 = addPFTauSelector(process, "hlt%ssPassingTrackPtGt5%s" % (pfTauLabel, suffix),
+    hltPFTausPassingTrackPt = addPFTauSelector(process, "hlt%ssPassingTrackPt%s" % (pfTauLabel, suffix),
         srcPFTaus,
         pftauDiscriminators, pftauSequence)
        
