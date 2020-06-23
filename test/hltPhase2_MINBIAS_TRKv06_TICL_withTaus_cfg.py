@@ -251,7 +251,7 @@ for algorithm in [ "hps", "shrinking-cone" ]:
           suffix)
         process.taucustomreco += pftauSequence
 
-process.reconstruction += process.taucustomreco
+process.reconstruction_step += process.taucustomreco
 
 # CV: add kt6PFJets for rho computation
 from RecoJets.JetProducers.kt6PFJets_cfi import kt6PFJets
@@ -259,7 +259,7 @@ process.hltKT6PFJets = kt6PFJets.clone(
     src = cms.InputTag("particleFlowTmp"),
     doRhoFastjet = cms.bool(True)
 )
-process.reconstruction += process.hltKT6PFJets
+process.reconstruction_step += process.hltKT6PFJets
 
 process.options = cms.untracked.PSet(
     wantSummary = cms.untracked.bool(True)
@@ -281,9 +281,9 @@ process = customiseEarlyDelete(process)
 ##dump_file.write(process.dumpPython())
 
 #Setup FWK for multithreaded
-process.options.numberOfThreads=cms.untracked.uint32(8)
-process.options.numberOfStreams=cms.untracked.uint32(8)
-process.options.numberOfConcurrentLuminosityBlocks=cms.untracked.uint32(1)
+process.options.numberOfThreads = cms.untracked.uint32(8)
+process.options.numberOfStreams = cms.untracked.uint32(8)
+process.options.numberOfConcurrentLuminosityBlocks = cms.untracked.uint32(1)
 
 
 
