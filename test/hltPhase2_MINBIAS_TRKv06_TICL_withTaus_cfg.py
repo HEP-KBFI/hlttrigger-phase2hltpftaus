@@ -25,8 +25,8 @@ process.load('Configuration.StandardSequences.FrontierConditions_GlobalTag_cff')
 #--------------------------------------------------------------------------------
 # CV: switch between offline-like and Pixel vertices
 
-#vertices = "OfflineVertices"
-vertices = "OnlineVertices"
+vertices = "OfflineVertices"
+#vertices = "OnlineVertices"
 #vertices = "OnlineVerticesTrimmed"
 
 srcVertices = None
@@ -146,6 +146,7 @@ process.RECOoutput = cms.OutputModule("PoolOutputModule",
         'keep *_ak4PFJetsCorrected*_*_*',           ## PRESENT ONLY IN MINIAOD/RECO
         'keep *_hlt*Tau*_*_*',                      ## PRODUCED BY addHLTPFTaus FUNCTION BELOW
         'keep *_particleFlowTmp_*_*',               ## KEEP REFERENCE TO reco::PFCandidate COLLECTION GIVEN AS INPUT TO addHLTPFTaus FUNCTION
+        'keep *_muons1stStep_*_*',                  ## KEEP REFERENCE TO reco::PFCandidate COLLECTION GIVEN AS INPUT TO addHLTPFTaus FUNCTION
         'keep *_electronGsfTracks_*_*',             ## KEEP REFERENCE TO reco::PFCandidate COLLECTION GIVEN AS INPUT TO addHLTPFTaus FUNCTION
         'keep *_generalTracks_*_*',                 ## KEEP REFERENCE TO reco::PFCandidate COLLECTION GIVEN AS INPUT TO addHLTPFTaus FUNCTION
         'keep *_offlinePrimaryVertices_*_*',        ## KEEP REFERENCE TO reco::PFCandidate COLLECTION GIVEN AS INPUT TO addHLTPFTaus FUNCTION
@@ -161,6 +162,7 @@ process.RECOoutput = cms.OutputModule("PoolOutputModule",
         'keep *_packedPFCandidates_*_*',            ## PRESENT ONLY IN MINIAOD/RECO
         'keep *_slimmedAddPileupInfo_*_*',          ## PRESENT ONLY IN MINIAOD/RECO
         'keep *_offlineSlimmedPrimaryVertices_*_*', ## PRESENT ONLY IN MINIAOD/RECO
+        'keep *_generatorSmeared_*_*',              ## CV: ALLOWS TO PRODUCE FULL COLLECTION OF genParticles FOR DEBUGGING PURPOSES 
     )
 )
 
