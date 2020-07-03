@@ -237,9 +237,19 @@ def addHLTPFTaus(process, algorithm, srcPFCandidates, srcVertices,
         setattr(process, srcPFTauSelectionDiscriminatorByHPS, hltPFTauSelectionDiscriminator)
         pftauSequence += hltPFTauSelectionDiscriminator
 
+        ##cleaner_leadTrackPt = cms.PSet(
+        ##    name = cms.string("leadTrackPt"),
+        ##    plugin = cms.string("RecoTauStringCleanerPlugin"),
+        ##    selection = cms.string("leadPFChargedHadrCand().isNonnull() & leadPFChargedHadrCand().trackRef().isNonnull()"),
+        ##    selectionPassFunction = cms.string("-leadPFChargedHadrCand().trackRef().pt()"), # CV: negative sign means that we prefer tau candidates with a lead. track of high pT
+        ##    selectionFailValue = cms.double(0),
+        ##    tolerance = cleaners.tolerance_default,
+        ##)
+
         hltPFTauCleaner = RecoTauCleaner.clone(
             src = cms.InputTag(srcCombinatoricRecoTaus),
             cleaners = cms.VPSet(
+                cleaners.charge,
                 cms.PSet(  
                     name = cms.string("HPS_Select"),
                     plugin = cms.string("RecoTauDiscriminantCleanerPlugin"),
@@ -247,6 +257,8 @@ def addHLTPFTaus(process, algorithm, srcPFCandidates, srcVertices,
                 ),
                 cleaners.killSoftTwoProngTaus,
                 cleaners.chargedHadronMultiplicity,
+                ##cleaner_leadTrackPt,
+                cleaners.pt,
                 cleaners.stripMultiplicity,
                 cleaners.chargeIsolation
             )
@@ -305,6 +317,7 @@ def addHLTPFTaus(process, algorithm, srcPFCandidates, srcVertices,
             ApplyDiscriminationByTrackerIsolation = cms.bool(True),
             ApplyDiscriminationByECALIsolation = cms.bool(False),
             ApplyDiscriminationByWeightedECALIsolation = cms.bool(False),
+            enableHGCalWorkaround = cms.bool(True),
             WeightECALIsolation = cms.double(1.),
             minTauPtForNoIso = cms.double(-99.),
             applyOccupancyCut = cms.bool(False),
