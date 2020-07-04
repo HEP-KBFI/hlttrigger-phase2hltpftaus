@@ -102,27 +102,29 @@ def addHLTPFTaus(process, algorithm, srcPFCandidates, srcVertices,
     pftauSequence += hltPFTauAK4PFJets
 
     #------------------------------------------------------------------------------------------------
-    genTaus = cms.EDFilter("GenParticleSelector",
-        src = cms.InputTag('genParticles'),
-        cut = cms.string('abs(pdgId) = 15 & status = 2 & pt > 20. & abs(eta) > 2.0 & abs(eta) < 2.4'),
-        stableOnly = cms.bool(True),
-        filter = cms.bool(False)
-    ) 
-    srcGenTaus = "genTausFor%s%s" % (pfTauLabel, suffix)
-    setattr(process, srcGenTaus,  genTaus)
-    pftauSequence += genTaus
-
-    genMatchedAK4PFJets = cms.EDFilter("PFJetAntiOverlapSelector",
-      src = cms.InputTag(srcPFTauAK4PFJets),
-      srcNotToBeFiltered = cms.VInputTag(srcGenTaus),
-      dRmin = cms.double(0.3),
-      invert = cms.bool(True),
-      filter = cms.bool(False)                                                          
-    )
-    srcGenMatchedAK4PFJets = "genMatchedAK4PFJetsFor%s%s" % (pfTauLabel, suffix)
-    setattr(process, srcGenMatchedAK4PFJets, genMatchedAK4PFJets)
-    pftauSequence += genMatchedAK4PFJets
-    srcPFTauAK4PFJets = srcGenMatchedAK4PFJets
+    ## CV: restrict PFTau reconstruction to genuine taus when debbugging,
+    ##     in order to avoid getting swamped by debug output !!
+    ##genTaus = cms.EDFilter("GenParticleSelector",
+    ##    src = cms.InputTag('genParticles'),
+    ##    cut = cms.string('abs(pdgId) = 15 & status = 2 & pt > 20. & abs(eta) > 2.0 & abs(eta) < 2.4'),
+    ##    stableOnly = cms.bool(True),
+    ##    filter = cms.bool(False)
+    ##) 
+    ##srcGenTaus = "genTausFor%s%s" % (pfTauLabel, suffix)
+    ##setattr(process, srcGenTaus,  genTaus)
+    ##pftauSequence += genTaus
+    ##
+    ##genMatchedAK4PFJets = cms.EDFilter("PFJetAntiOverlapSelector",
+    ##  src = cms.InputTag(srcPFTauAK4PFJets),
+    ##  srcNotToBeFiltered = cms.VInputTag(srcGenTaus),
+    ##  dRmin = cms.double(0.3),
+    ##  invert = cms.bool(True),
+    ##  filter = cms.bool(False)                                                          
+    ##)
+    ##srcGenMatchedAK4PFJets = "genMatchedAK4PFJetsFor%s%s" % (pfTauLabel, suffix)
+    ##setattr(process, srcGenMatchedAK4PFJets, genMatchedAK4PFJets)
+    ##pftauSequence += genMatchedAK4PFJets
+    ##srcPFTauAK4PFJets = srcGenMatchedAK4PFJets
     #------------------------------------------------------------------------------------------------
 
     hltPFTau08Region = RecoTauJetRegionProducer.clone(
@@ -134,14 +136,6 @@ def addHLTPFTaus(process, algorithm, srcPFCandidates, srcVertices,
     srcPFTau08Region = "hlt%sPFJets08Region%s" % (pfTauLabel, suffix)
     setattr(process, srcPFTau08Region, hltPFTau08Region)
     pftauSequence += hltPFTau08Region
-
-    ##ranking_isChargedPFCandidate_withHGCalFix = cms.PSet(
-    ##  name = cms.string('ChargedPFCandidate'),
-    ##  plugin = cms.string('PFRecoTauChargedHadronStringQuality'),
-    ##  selection = cms.string("algoIs('kChargedPFCandidate') & getChargedPFCandidate().isNonnull() & getChargedPFCandidate().trackRef().isNonnull()"),
-    ##  selectionPassFunction = cms.string("-getChargedPFCandidate().trackRef().pt()"), # CV: negative sign means that we prefer candidates with a reco::Track of high pT
-    ##  selectionFailValue = cms.double(0)
-    ##)
 
     builders_chargedPFCandidates = builders.chargedPFCandidates.clone(
         qualityCuts = hltQualityCuts
@@ -158,11 +152,9 @@ def addHLTPFTaus(process, algorithm, srcPFCandidates, srcVertices,
         maxJetAbsEta = cms.double(maxSeedJetAbsEta),
         outputSelection = cms.string('pt > %1.2f' % minSignalTrackPt),
         builders = cms.VPSet(
-            ##builders.chargedPFCandidates
             builders_chargedPFCandidates
         ),
         ranking = cms.VPSet(
-            ##ranking.isChargedPFCandidate
             ranking_isChargedPFCandidate_withHGCalFix
         )
     )
@@ -285,14 +277,6 @@ def addHLTPFTaus(process, algorithm, srcPFCandidates, srcVertices,
         setattr(process, srcPFTauSelectionDiscriminatorByHPS, hltPFTauSelectionDiscriminator)
         pftauSequence += hltPFTauSelectionDiscriminator
 
-        ##cleaner_leadTrackPt = cms.PSet(
-        ##    name = cms.string("leadTrackPt"),
-        ##    plugin = cms.string("RecoTauStringCleanerPlugin"),
-        ##    selection = cms.string("leadPFChargedHadrCand().isNonnull() & leadPFChargedHadrCand().trackRef().isNonnull()"),
-        ##    selectionPassFunction = cms.string("-leadPFChargedHadrCand().trackRef().pt()"), # CV: negative sign means that we prefer tau candidates with a "leading" reco::Track of high pT
-        ##    selectionFailValue = cms.double(0),
-        ##    tolerance = cleaners.tolerance_default,
-        ##)
         cleaner_leadTrackPt = cms.PSet(
             name = cms.string("leadTrackPt"),
             plugin = cms.string("RecoTauCleanerPluginHGCalWorkaround"),
@@ -302,7 +286,7 @@ def addHLTPFTaus(process, algorithm, srcPFCandidates, srcVertices,
         hltPFTauCleaner = RecoTauCleaner.clone(
             src = cms.InputTag(srcCombinatoricRecoTaus),
             cleaners = cms.VPSet(
-                cleaners.charge,
+                cleaners.charge, # CV: to be disabled when using 2-prongs !!
                 cms.PSet(  
                     name = cms.string("HPS_Select"),
                     plugin = cms.string("RecoTauDiscriminantCleanerPlugin"),
