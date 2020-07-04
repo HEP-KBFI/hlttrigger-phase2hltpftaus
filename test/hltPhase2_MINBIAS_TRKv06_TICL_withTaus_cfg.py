@@ -225,35 +225,35 @@ process.taucustomreco = cms.Sequence()
 from HLTTrigger.Phase2HLTPFTaus.tools.addHLTPFTaus import addHLTPFTaus
 srcPFCandidates = "particleFlowTmp"
 for algorithm in [ "hps", "shrinking-cone" ]:
-    for isolation_maxDeltaZOption in [ "primaryVertex", "leadTrack" ]:
-      for isolation_minTrackHits in [ 3, 5, 8 ]:  
+  for isolation_maxDeltaZOption in [ "primaryVertex", "leadTrack" ]:
+    for isolation_minTrackHits in [ 3, 5, 8 ]:  
 
-        suffix = "%iHits" % isolation_minTrackHits
-        isolation_maxDeltaZ            = None
-        isolation_maxDeltaZToLeadTrack = None
-        if isolation_maxDeltaZOption == "primaryVertex":
-          isolation_maxDeltaZ            =  0.15 # value optimized for offline tau reconstruction at higher pileup expected during LHC Phase-2
-          isolation_maxDeltaZToLeadTrack = -1.   # disabled
-          suffix += "MaxDeltaZ"
-        elif isolation_maxDeltaZOption == "leadTrack":
-          isolation_maxDeltaZ            = -1.   # disabled
-          isolation_maxDeltaZToLeadTrack =  0.15 # value optimized for offline tau reconstruction at higher pileup expected during LHC Phase-2
-          suffix += "MaxDeltaZToLeadTrack"
-        else:
-          raise ValueError("Invalid parameter isolation_maxDeltaZOption = '%s' !!" % isolation_maxDeltaZOption)
-        if srcVertices == "offlinePrimaryVertices":
-          suffix += "WithOfflineVertices"
-        elif srcVertices == "hltPhase2PixelVertices":
-          suffix += "WithOnlineVertices"
-        elif srcVertices == "hltPhase2TrimmedPixelVertices":
-          suffix += "WithOnlineVerticesTrimmed"
-        else:
-          raise ValueError("Invalid parameter srcVertices = '%s' !!" % srcVertices)        
+      suffix = "%iHits" % isolation_minTrackHits
+      isolation_maxDeltaZ            = None
+      isolation_maxDeltaZToLeadTrack = None
+      if isolation_maxDeltaZOption == "primaryVertex":
+        isolation_maxDeltaZ            =  0.15 # value optimized for offline tau reconstruction at higher pileup expected during LHC Phase-2
+        isolation_maxDeltaZToLeadTrack = -1.   # disabled
+        suffix += "MaxDeltaZ"
+      elif isolation_maxDeltaZOption == "leadTrack":
+        isolation_maxDeltaZ            = -1.   # disabled
+        isolation_maxDeltaZToLeadTrack =  0.15 # value optimized for offline tau reconstruction at higher pileup expected during LHC Phase-2
+        suffix += "MaxDeltaZToLeadTrack"
+      else:
+        raise ValueError("Invalid parameter isolation_maxDeltaZOption = '%s' !!" % isolation_maxDeltaZOption)
+      if srcVertices == "offlinePrimaryVertices":
+        suffix += "WithOfflineVertices"
+      elif srcVertices == "hltPhase2PixelVertices":
+        suffix += "WithOnlineVertices"
+      elif srcVertices == "hltPhase2TrimmedPixelVertices":
+        suffix += "WithOnlineVerticesTrimmed"
+      else:
+        raise ValueError("Invalid parameter srcVertices = '%s' !!" % srcVertices)        
         
-        pftauSequence = addHLTPFTaus(process, algorithm, srcPFCandidates, srcVertices, 
-          isolation_maxDeltaZ, isolation_maxDeltaZToLeadTrack, isolation_minTrackHits, 
-          suffix)
-        process.taucustomreco += pftauSequence
+      pftauSequence = addHLTPFTaus(process, algorithm, srcPFCandidates, srcVertices, 
+        isolation_maxDeltaZ, isolation_maxDeltaZToLeadTrack, isolation_minTrackHits, 
+        suffix)
+      process.taucustomreco += pftauSequence
 
 process.reconstruction_step += process.taucustomreco
 
