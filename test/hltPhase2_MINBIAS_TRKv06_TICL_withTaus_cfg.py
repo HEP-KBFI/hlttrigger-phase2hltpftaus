@@ -153,6 +153,8 @@ process.RECOoutput = cms.OutputModule("PoolOutputModule",
         'keep *_hltPhase2PixelVertices_*_*',        ## PRODUCED BELOW
         'keep *_hltPhase2TrimmedPixelVertices_*_*', ## PRODUCED BELOW
         'keep *_hltKT6PFJets_*_*',                  ## PRODUCED BELOW
+        'keep *_hltPFMET*_*_*',                     ## PRODUCED BELOW
+        'keep *_hltPuppiMET*_*_*',                  ## PRODUCED BELOW
         'keep *_prunedGenParticles_*_*',            ## PRESENT ONLY IN MINIAOD/RECO
         'keep *_ak4GenJets_*_*',                    ## PRESENT ONLY IN MINIAOD/RECO
         'keep *_ak8GenJets_*_*',                    ## PRESENT ONLY IN MINIAOD/RECO
