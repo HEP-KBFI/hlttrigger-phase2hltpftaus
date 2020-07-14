@@ -47,8 +47,9 @@ process.maxEvents = cms.untracked.PSet(
 
 # Input source
 process.source = cms.Source("PoolSource",
-                            fileNames = cms.untracked.vstring('file:/hdfs/cms/store/mc/Phase2HLTTDRWinter20DIGI/QCD_Pt_120to170_TuneCP5_14TeV_pythia8/GEN-SIM-DIGI-RAW/PU200_110X_mcRun4_realistic_v3-v2/20000/EABECFB8-B05F-1F40-98A2-B174A99FD5C2.root')
-                            #fileNames = cms.untracked.vstring('file:/hdfs/cms/store/mc/Run3Winter20DRPremixMiniAOD/WJetsToLNu_TuneCP5_14TeV-amcatnloFXFX-pythia8/GEN-SIM-RAW/110X_mcRun3_2021_realistic_v6-v1/20000/778690DC-AB99-1849-9E7D-36FB30A546F7.root')
+    #fileNames = cms.untracked.vstring('file:/hdfs/cms/store/mc/Phase2HLTTDRWinter20DIGI/QCD_Pt_120to170_TuneCP5_14TeV_pythia8/GEN-SIM-DIGI-RAW/PU200_110X_mcRun4_realistic_v3-v2/20000/EABECFB8-B05F-1F40-98A2-B174A99FD5C2.root')
+    #fileNames = cms.untracked.vstring('file:/hdfs/cms/store/mc/Run3Winter20DRPremixMiniAOD/WJetsToLNu_TuneCP5_14TeV-amcatnloFXFX-pythia8/GEN-SIM-RAW/110X_mcRun3_2021_realistic_v6-v1/20000/778690DC-AB99-1849-9E7D-36FB30A546F7.root')
+    fileNames = cms.untracked.vstring('file:/hdfs/cms/store/mc/Phase2HLTTDRWinter20DIGI/QCD_Pt_50to80_TuneCP5_14TeV_pythia8/GEN-SIM-DIGI-RAW/PU200_110X_mcRun4_realistic_v3-v2/10000/FF49837E-DFAA-F247-B065-0D3A2FDCFD02.root')
 )
 
 process.options = cms.untracked.PSet(
@@ -127,6 +128,7 @@ process.RECOoutput = cms.OutputModule("PoolOutputModule",
         'keep *_slimmedAddPileupInfo_*_*',          ## PRESENT ONLY IN MINIAOD/RECO
         'keep *_offlineSlimmedPrimaryVertices_*_*', ## PRESENT ONLY IN MINIAOD/RECO
         'keep *_generatorSmeared_*_*',              ## CV: ALLOWS TO PRODUCE FULL COLLECTION OF genParticles FOR DEBUGGING PURPOSES 
+        'keep *_generator_*_*',                     ## CV: NEEDED TO MAKE PTHAT PLOTS FOR QCD MULTIJET MC SAMPLES
     )
 )
 
