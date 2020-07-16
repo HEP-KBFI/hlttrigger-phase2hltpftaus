@@ -22,7 +22,10 @@ PFTauPairProducer::PFTauPairProducer(const edm::ParameterSet& cfg)
   srcPFTaus_ = cfg.getParameter<edm::InputTag>("srcPFTaus");
   tokenPFTaus_ = consumes<reco::PFTauCollection>(srcPFTaus_);
   srcPFTauSumChargedIso_ = cfg.getParameter<edm::InputTag>("srcPFTauSumChargedIso");
-  tokenPFTauSumChargedIso_ = consumes<reco::PFTauDiscriminator>(srcPFTauSumChargedIso_);
+  if ( srcPFTauSumChargedIso_.label() != "" )
+  {
+    tokenPFTauSumChargedIso_ = consumes<reco::PFTauDiscriminator>(srcPFTauSumChargedIso_);
+  }
 
   produces<reco::PFTauPairCollection>();
 }
@@ -47,14 +50,21 @@ void PFTauPairProducer::produce(edm::Event& evt, const edm::EventSetup& es)
   edm::Handle<reco::PFTauCollection> pfTaus;
   evt.getByToken(tokenPFTaus_, pfTaus);
   edm::Handle<reco::PFTauDiscriminator> pfTauSumChargedIso;
-  evt.getByToken(tokenPFTauSumChargedIso_, pfTauSumChargedIso);
+  if ( srcPFTauSumChargedIso_.label() != "" )
+  {
+    evt.getByToken(tokenPFTauSumChargedIso_, pfTauSumChargedIso);
+  }
 
   std::vector<std::pair<reco::PFTauRef, double>> pfTaus_wChargedIso_sorted;
   size_t numPFTaus = pfTaus->size();
   for ( size_t idxPFTau = 0; idxPFTau < numPFTaus; ++idxPFTau ) 
   { 
     reco::PFTauRef pfTauRef(pfTaus, idxPFTau);
-    double sumChargedIso = (*pfTauSumChargedIso)[pfTauRef];
+    double sumChargedIso = 0.;
+    if ( srcPFTauSumChargedIso_.label() != "" )
+    {
+      sumChargedIso = (*pfTauSumChargedIso)[pfTauRef];
+    }
     pfTaus_wChargedIso_sorted.push_back(std::pair<reco::PFTauRef, double>(pfTauRef, sumChargedIso));
   }
   std::sort(pfTaus_wChargedIso_sorted.begin(), pfTaus_wChargedIso_sorted.end(), isHigherPt);
