@@ -24,7 +24,6 @@ process.load('Configuration.StandardSequences.FrontierConditions_GlobalTag_cff')
 
 #--------------------------------------------------------------------------------
 # CV: switch between offline-like and Pixel vertices
-
 vertices = "OfflineVertices"
 #vertices = "OnlineVertices"
 #vertices = "OnlineVerticesTrimmed"
@@ -38,6 +37,10 @@ elif vertices == "OnlineVerticesTrimmed":
     srcVertices = "hltPhase2TrimmedPixelVertices"
 else:
     raise ValueError("Invalid configuration parameter vertices = '%s' !!" % vertices)
+
+# CV: enable/disable L1 emulator
+#runL1Emulator = False
+runL1Emulator = True
 #--------------------------------------------------------------------------------
 
 process.maxEvents = cms.untracked.PSet(
@@ -51,7 +54,7 @@ process.source = cms.Source("PoolSource",
         'file:/hdfs/cms/store/mc/Phase2HLTTDRWinter20RECOMiniAOD/MinBias_TuneCP5_14TeV-pythia8/MINIAODSIM/PU200_110X_mcRun4_realistic_v3-v1/110000/054D8F53-89B2-E143-B106-FD85AC2F1F4B.root'
     ),
     secondaryFileNames = cms.untracked.vstring(
-        'file:/hdfs/cms/store/mc/Phase2HLTTDRWinter20DIGI/MinBias_TuneCP5_14TeV-pythia8/GEN-SIM-DIGI-RAW/PU200_110X_mcRun4_realistic_v3-v1/110002/8A31EE8B-FC0F-A949-8340-58E2ABD2F30F.root',
+                'file:/hdfs/cms/store/mc/Phase2HLTTDRWinter20DIGI/MinBias_TuneCP5_14TeV-pythia8/GEN-SIM-DIGI-RAW/PU200_110X_mcRun4_realistic_v3-v1/110002/8A31EE8B-FC0F-A949-8340-58E2ABD2F30F.root',
         'file:/hdfs/cms/store/mc/Phase2HLTTDRWinter20DIGI/MinBias_TuneCP5_14TeV-pythia8/GEN-SIM-DIGI-RAW/PU200_110X_mcRun4_realistic_v3-v1/110002/7CD16EEB-247E-A340-9C46-6345ECF18A82.root',
         'file:/hdfs/cms/store/mc/Phase2HLTTDRWinter20DIGI/MinBias_TuneCP5_14TeV-pythia8/GEN-SIM-DIGI-RAW/PU200_110X_mcRun4_realistic_v3-v1/110002/7795313D-A909-354A-9226-41B90CDCF847.root',
         'file:/hdfs/cms/store/mc/Phase2HLTTDRWinter20DIGI/MinBias_TuneCP5_14TeV-pythia8/GEN-SIM-DIGI-RAW/PU200_110X_mcRun4_realistic_v3-v1/110002/6920F67D-2E85-7D4E-835D-C7B76479E559.root',
@@ -153,6 +156,8 @@ process.RECOoutput = cms.OutputModule("PoolOutputModule",
         'keep *_hltPhase2PixelVertices_*_*',        ## PRODUCED BELOW
         'keep *_hltPhase2TrimmedPixelVertices_*_*', ## PRODUCED BELOW
         'keep *_hltKT6PFJets_*_*',                  ## PRODUCED BELOW
+        'keep *_hltPFMET*_*_*',                     ## PRODUCED BELOW
+        'keep *_hltPuppiMET*_*_*',                  ## PRODUCED BELOW
         'keep *_prunedGenParticles_*_*',            ## PRESENT ONLY IN MINIAOD/RECO
         'keep *_ak4GenJets_*_*',                    ## PRESENT ONLY IN MINIAOD/RECO
         'keep *_ak8GenJets_*_*',                    ## PRESENT ONLY IN MINIAOD/RECO
@@ -163,6 +168,7 @@ process.RECOoutput = cms.OutputModule("PoolOutputModule",
         'keep *_slimmedAddPileupInfo_*_*',          ## PRESENT ONLY IN MINIAOD/RECO
         'keep *_offlineSlimmedPrimaryVertices_*_*', ## PRESENT ONLY IN MINIAOD/RECO
         'keep *_generatorSmeared_*_*',              ## CV: ALLOWS TO PRODUCE FULL COLLECTION OF genParticles FOR DEBUGGING PURPOSES 
+        'keep *_generator_*_*',                     ## CV: NEEDED TO MAKE PTHAT PLOTS FOR QCD MULTIJET MC SAMPLES
         'keep *_L1HPSPFTauProducer*PF_*_*',         ## ADDED BY L1 EMULATOR
         'keep *_l1pfCandidates_PF_*',               ## ADDED BY L1 EMULATOR
         'keep *_l1pfProducer*_z0_*',                ## ADDED BY L1 EMULATOR
@@ -174,6 +180,11 @@ process.RECOoutput = cms.OutputModule("PoolOutputModule",
         'keep *_ak4PFL1PFCorrected_*_*',            ## ADDED BY L1 EMULATOR
         'keep *_kt6L1PFJetsPF_rho_*',               ## ADDED BY L1 EMULATOR
         'keep *_kt6L1PFJetsNeutralsPF_rho_*',       ## ADDED BY L1 EMULATOR        
+        'keep *_l1pfCandidates_PF_*',               ## ADDED BY L1 EMULATOR   
+        'keep *_l1pfCandidates_Puppi_*',            ## ADDED BY L1 EMULATOR   
+        'keep *_L1TkPrimaryVertex_*_*',             ## ADDED BY L1 EMULATOR
+        'keep *_L1HPSPFTauProducer*PF_*_*',         ## ADDED BY L1 EMULATOR
+        'keep *_L1HPSPFTauProducer*Puppi_*_*',      ## ADDED BY L1 EMULATOR
     )
 )
 
@@ -216,7 +227,7 @@ process = customize_hltPhase2_TICL(process)
 
 #--------------------------------------------------------------------------------
 # CV: run HLT Pixel vertex reconstruction
-process.load("HLTTrigger.Phase2HLTPFTaus.hltPixelVertices_cff")
+process.load("HLTrigger.Phase2HLTPFTaus.hltPixelVertices_cff")
 process.reconstruction_step.replace(process.offlinePrimaryVertices, process.offlinePrimaryVertices + process.hltPhase2PixelTracksSequence + process.hltPhase2PixelVerticesSequence)
 
 # CV: switch vertex collection in particle-flow algorithm
@@ -231,38 +242,38 @@ if srcVertices != "offlinePrimaryVertices":
 process.taucustomreco = cms.Sequence()
 
 # run HLT tau reconstruction
-from HLTTrigger.Phase2HLTPFTaus.tools.addHLTPFTaus import addHLTPFTaus
+from HLTrigger.Phase2HLTPFTaus.tools.addHLTPFTaus import addHLTPFTaus
 srcPFCandidates = "particleFlowTmp"
 for algorithm in [ "hps", "shrinking-cone" ]:
-    for isolation_maxDeltaZOption in [ "primaryVertex", "leadTrack" ]:
-      for isolation_minTrackHits in [ 3, 5, 8 ]:  
+  for isolation_maxDeltaZOption in [ "primaryVertex", "leadTrack" ]:
+    for isolation_minTrackHits in [ 3, 5, 8 ]:  
 
-        suffix = "%iHits" % isolation_minTrackHits
-        isolation_maxDeltaZ            = None
-        isolation_maxDeltaZToLeadTrack = None
-        if isolation_maxDeltaZOption == "primaryVertex":
-          isolation_maxDeltaZ            =  0.15 # value optimized for offline tau reconstruction at higher pileup expected during LHC Phase-2
-          isolation_maxDeltaZToLeadTrack = -1.   # disabled
-          suffix += "MaxDeltaZ"
-        elif isolation_maxDeltaZOption == "leadTrack":
-          isolation_maxDeltaZ            = -1.   # disabled
-          isolation_maxDeltaZToLeadTrack =  0.15 # value optimized for offline tau reconstruction at higher pileup expected during LHC Phase-2
-          suffix += "MaxDeltaZToLeadTrack"
-        else:
-          raise ValueError("Invalid parameter isolation_maxDeltaZOption = '%s' !!" % isolation_maxDeltaZOption)
-        if srcVertices == "offlinePrimaryVertices":
-          suffix += "WithOfflineVertices"
-        elif srcVertices == "hltPhase2PixelVertices":
-          suffix += "WithOnlineVertices"
-        elif srcVertices == "hltPhase2TrimmedPixelVertices":
-          suffix += "WithOnlineVerticesTrimmed"
-        else:
-          raise ValueError("Invalid parameter srcVertices = '%s' !!" % srcVertices)        
+      suffix = "%iHits" % isolation_minTrackHits
+      isolation_maxDeltaZ            = None
+      isolation_maxDeltaZToLeadTrack = None
+      if isolation_maxDeltaZOption == "primaryVertex":
+        isolation_maxDeltaZ            =  0.15 # value optimized for offline tau reconstruction at higher pileup expected during LHC Phase-2
+        isolation_maxDeltaZToLeadTrack = -1.   # disabled
+        suffix += "MaxDeltaZ"
+      elif isolation_maxDeltaZOption == "leadTrack":
+        isolation_maxDeltaZ            = -1.   # disabled
+        isolation_maxDeltaZToLeadTrack =  0.15 # value optimized for offline tau reconstruction at higher pileup expected during LHC Phase-2
+        suffix += "MaxDeltaZToLeadTrack"
+      else:
+        raise ValueError("Invalid parameter isolation_maxDeltaZOption = '%s' !!" % isolation_maxDeltaZOption)
+      if srcVertices == "offlinePrimaryVertices":
+        suffix += "WithOfflineVertices"
+      elif srcVertices == "hltPhase2PixelVertices":
+        suffix += "WithOnlineVertices"
+      elif srcVertices == "hltPhase2TrimmedPixelVertices":
+        suffix += "WithOnlineVerticesTrimmed"
+      else:
+        raise ValueError("Invalid parameter srcVertices = '%s' !!" % srcVertices)        
         
-        pftauSequence = addHLTPFTaus(process, algorithm, srcPFCandidates, srcVertices, 
-          isolation_maxDeltaZ, isolation_maxDeltaZToLeadTrack, isolation_minTrackHits, 
-          suffix)
-        process.taucustomreco += pftauSequence
+      pftauSequence = addHLTPFTaus(process, algorithm, srcPFCandidates, srcVertices, 
+        isolation_maxDeltaZ, isolation_maxDeltaZToLeadTrack, isolation_minTrackHits, 
+        suffix)
+      process.taucustomreco += pftauSequence
 
 process.reconstruction_step += process.taucustomreco
 
@@ -273,82 +284,39 @@ process.hltKT6PFJets = kt6PFJets.clone(
     doRhoFastjet = cms.bool(True)
 )
 process.reconstruction_step += process.hltKT6PFJets
+#--------------------------------------------------------------------------------
+
+#--------------------------------------------------------------------------------
+# CV: run L1 trigger emulator and produce L1 HPS PF Tau objects 
+if runL1Emulator:
+    process.load('L1Trigger.Phase2L1Taus.l1emulator_cff') 
+    process.l1emulatorSequence = cms.Sequence(process.l1emulator)
+
+    # SB: produce L1 HPS PF Tau objects 
+    from L1Trigger.Phase2L1Taus.L1HPSPFTauProducerPF_cfi import L1HPSPFTauProducerPF
+    from L1Trigger.Phase2L1Taus.L1HPSPFTauProducerPuppi_cfi import L1HPSPFTauProducerPuppi
+    for useStrips in [ True, False ]:
+        moduleNameBase = "L1HPSPFTauProducer"
+        if useStrips:
+            moduleNameBase += "WithStrips"
+        else:
+            moduleNameBase += "WithoutStrips"
+
+        moduleNamePF = moduleNameBase + "PF"
+        modulePF = L1HPSPFTauProducerPF.clone(
+            useStrips = cms.bool(useStrips),
+            applyPreselection = cms.bool(False),
+            debug = cms.untracked.bool(False)
+        )
+        setattr(process, moduleNamePF, modulePF)
+        process.l1emulatorSequence += getattr(process, moduleNamePF)
+
+    process.reconstruction_step += process.l1emulatorSequence
+#--------------------------------------------------------------------------------
 
 process.options = cms.untracked.PSet(
     wantSummary = cms.untracked.bool(True)
 )
-#--------------------------------------------------------------------------------
-
-#--------------------------------------------------------------------------------
-# CV: add L1 trigger emulator
-
-process.l1emulator = cms.Sequence()
-
-process.load('SimCalorimetry.HcalTrigPrimProducers.hcaltpdigi_cff')
-process.load('CalibCalorimetry.CaloTPG.CaloTPGTranscoder_cfi')
-
-process.load('L1Trigger.L1THGCal.hgcalTriggerPrimitives_cff')
-process.l1emulator += process.hgcalTriggerPrimitives
-
-process.load('SimCalorimetry.EcalEBTrigPrimProducers.ecalEBTriggerPrimitiveDigis_cff')
-process.l1emulator += process.simEcalEBTriggerPrimitiveDigis
-
-process.load('L1Trigger.TrackFindingTracklet.L1TrackletTracks_cff')
-process.l1emulator += process.L1TrackletTracksWithAssociators
-
-process.load('L1Trigger.VertexFinder.VertexProducer_cff')
-process.VertexProducer.l1TracksInputTag = cms.InputTag("TTTracksFromTracklet", "Level1TTTracks")
-
-process.load('Configuration.StandardSequences.SimL1Emulator_cff')
-process.l1emulator += process.SimL1Emulator
-
-process.load("L1Trigger.Phase2L1ParticleFlow.pfTracksFromL1Tracks_cfi")
-process.l1emulator += process.pfTracksFromL1Tracks
-
-process.load("L1Trigger.Phase2L1ParticleFlow.l1ParticleFlow_cff")
-process.l1emulator += process.l1ParticleFlow
-
-process.load("L1Trigger.Phase2L1ParticleFlow.l1pfJetMet_cff")
-process.l1emulator += process.l1PFJets
-
-process.kt6L1PFJetsPF = process.ak4PFL1PF.clone(
-    jetAlgorithm = cms.string("Kt"),
-    rParam       = cms.double(0.6),
-    doRhoFastjet = cms.bool(True),
-    Rho_EtaMax   = cms.double(3.0)
-)
-process.l1emulator += process.kt6L1PFJetsPF
-process.l1pfNeutralCandidatesPF = cms.EDFilter("L1TPFCandSelector",
-    src = cms.InputTag('l1pfCandidates:PF'),                                      
-    cut = cms.string("pdgId = 22"), # CV: cms.string("id = Photon") does not work (does not select any l1t::PFCandidates)
-    filter = cms.bool(False)                                           
-)
-process.l1emulator += process.l1pfNeutralCandidatesPF
-process.kt6L1PFJetsNeutralsPF = process.kt6L1PFJetsPF.clone(
-    src = cms.InputTag('l1pfNeutralCandidatesPF')
-) 
-process.l1emulator += process.kt6L1PFJetsNeutralsPF
-
-from L1Trigger.Phase2L1Taus.L1HPSPFTauProducerPF_cff import L1HPSPFTauProducerPF
-from L1Trigger.Phase2L1Taus.L1HPSPFTauProducerPuppi_cff import L1HPSPFTauProducerPuppi
-for useStrips in [ True, False ]:
-    moduleNameBase = "L1HPSPFTauProducer"
-    if useStrips:
-        moduleNameBase += "WithStrips"
-    else:
-        moduleNameBase += "WithoutStrips"
-        
-    moduleNamePF = moduleNameBase + "PF"
-    modulePF = L1HPSPFTauProducerPF.clone(
-        useStrips = cms.bool(useStrips),
-        applyPreselection = cms.bool(False),
-        debug = cms.untracked.bool(False)
-    )
-    setattr(process, moduleNamePF, modulePF)
-    process.l1emulator += getattr(process, moduleNamePF)
-
-process.reconstruction_step += process.l1emulator
-#--------------------------------------------------------------------------------
 
 # End of customisation functions
 
