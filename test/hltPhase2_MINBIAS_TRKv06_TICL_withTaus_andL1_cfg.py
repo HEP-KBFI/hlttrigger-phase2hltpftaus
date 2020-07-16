@@ -54,7 +54,7 @@ process.source = cms.Source("PoolSource",
         'file:/hdfs/cms/store/mc/Phase2HLTTDRWinter20RECOMiniAOD/MinBias_TuneCP5_14TeV-pythia8/MINIAODSIM/PU200_110X_mcRun4_realistic_v3-v1/110000/054D8F53-89B2-E143-B106-FD85AC2F1F4B.root'
     ),
     secondaryFileNames = cms.untracked.vstring(
-                'file:/hdfs/cms/store/mc/Phase2HLTTDRWinter20DIGI/MinBias_TuneCP5_14TeV-pythia8/GEN-SIM-DIGI-RAW/PU200_110X_mcRun4_realistic_v3-v1/110002/8A31EE8B-FC0F-A949-8340-58E2ABD2F30F.root',
+        'file:/hdfs/cms/store/mc/Phase2HLTTDRWinter20DIGI/MinBias_TuneCP5_14TeV-pythia8/GEN-SIM-DIGI-RAW/PU200_110X_mcRun4_realistic_v3-v1/110002/8A31EE8B-FC0F-A949-8340-58E2ABD2F30F.root',
         'file:/hdfs/cms/store/mc/Phase2HLTTDRWinter20DIGI/MinBias_TuneCP5_14TeV-pythia8/GEN-SIM-DIGI-RAW/PU200_110X_mcRun4_realistic_v3-v1/110002/7CD16EEB-247E-A340-9C46-6345ECF18A82.root',
         'file:/hdfs/cms/store/mc/Phase2HLTTDRWinter20DIGI/MinBias_TuneCP5_14TeV-pythia8/GEN-SIM-DIGI-RAW/PU200_110X_mcRun4_realistic_v3-v1/110002/7795313D-A909-354A-9226-41B90CDCF847.root',
         'file:/hdfs/cms/store/mc/Phase2HLTTDRWinter20DIGI/MinBias_TuneCP5_14TeV-pythia8/GEN-SIM-DIGI-RAW/PU200_110X_mcRun4_realistic_v3-v1/110002/6920F67D-2E85-7D4E-835D-C7B76479E559.root',
