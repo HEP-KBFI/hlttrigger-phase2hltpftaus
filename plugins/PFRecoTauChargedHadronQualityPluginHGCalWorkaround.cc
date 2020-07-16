@@ -1,4 +1,4 @@
-#include "HLTTrigger/Phase2HLTPFTaus/plugins/PFRecoTauChargedHadronQualityPluginHGCalWorkaround.h"
+#include "HLTrigger/Phase2HLTPFTaus/plugins/PFRecoTauChargedHadronQualityPluginHGCalWorkaround.h"
 
 #include "DataFormats/ParticleFlowCandidate/interface/PFCandidate.h"
 

@@ -1,4 +1,4 @@
-#include "HLTTrigger/Phase2HLTPFTaus/plugins/RecoTauCleanerPluginHGCalWorkaround.h"
+#include "HLTrigger/Phase2HLTPFTaus/plugins/RecoTauCleanerPluginHGCalWorkaround.h"
 
 RecoTauCleanerPluginHGCalWorkaround::RecoTauCleanerPluginHGCalWorkaround(const edm::ParameterSet& cfg, edm::ConsumesCollector&& cc)
   : reco::tau::RecoTauCleanerPlugin(cfg, std::move(cc))

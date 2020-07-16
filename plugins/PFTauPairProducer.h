@@ -1,5 +1,5 @@
-#ifndef HLTTrigger_Phase2HLTPFTaus_PFTauPairProducer_h
-#define HLTTrigger_Phase2HLTPFTaus_PFTauPairProducer_h
+#ifndef HLTrigger_Phase2HLTPFTaus_PFTauPairProducer_h
+#define HLTrigger_Phase2HLTPFTaus_PFTauPairProducer_h
 
 #include "FWCore/Framework/interface/EDProducer.h"
 #include "FWCore/Framework/interface/Event.h"

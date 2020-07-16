@@ -1,4 +1,4 @@
-#include "HLTTrigger/Phase2HLTPFTaus/plugins/PFTauPairProducer.h"
+#include "HLTrigger/Phase2HLTPFTaus/plugins/PFTauPairProducer.h"
 
 #include "DataFormats/Common/interface/Handle.h" // edm::Handle
 #include "DataFormats/Math/interface/deltaR.h"   // reco::deltaR

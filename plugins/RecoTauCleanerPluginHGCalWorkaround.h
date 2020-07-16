@@ -1,5 +1,5 @@
-#ifndef HLTTrigger_Phase2HLTPFTaus_RecoTauCleanerPluginHGCalWorkaround_h
-#define HLTTrigger_Phase2HLTPFTaus_RecoTauCleanerPluginHGCalWorkaround_h
+#ifndef HLTrigger_Phase2HLTPFTaus_RecoTauCleanerPluginHGCalWorkaround_h
+#define HLTrigger_Phase2HLTPFTaus_RecoTauCleanerPluginHGCalWorkaround_h
 
 #include "RecoTauTag/RecoTau/interface/RecoTauBuilderPlugins.h"
 #include "DataFormats/TauReco/interface/PFTau.h"
