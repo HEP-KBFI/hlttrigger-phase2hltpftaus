@@ -392,7 +392,8 @@ def addHLTPFTaus(process, algorithm, srcPFCandidates, srcVertices,
     hltPFTauNeutralIsoPtSum = addPFTauDiscriminator(process, "hlt%sNeutralIsoPtSum%s" % (pfTauLabel, suffix),
         hltPFTauChargedIsoPtSum.clone(
             ApplyDiscriminationByTrackerIsolation = cms.bool(False),
-            ApplyDiscriminationByECALIsolation = cms.bool(True)
+            ApplyDiscriminationByECALIsolation = cms.bool(True),
+            WeightECALIsolation = cms.double(1.)
         ),
         pftauDiscriminators, pftauSequence)
 
