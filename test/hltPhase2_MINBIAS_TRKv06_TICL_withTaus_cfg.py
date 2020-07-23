@@ -103,32 +103,32 @@ process.RECOoutput = cms.OutputModule("PoolOutputModule",
     ),
     outputCommands = cms.untracked.vstring(
         'drop *',
-        'keep *_ak4GenJets*_*_*',                   ## PRESENT ONLY IN RAW
-        'keep *_hltGtStage2Digis*_*_*',             ## PRESENT ONLY IN RAW
-        'keep *_hltTriggerSummaryRAW*_*_*',         ## PRESENT ONLY IN RAW
-        'keep *_ak4PFJetsCorrected*_*_*',           ## PRESENT ONLY IN MINIAOD/RECO
-        'keep *_hlt*Tau*_*_*',                      ## PRODUCED BY addHLTPFTaus FUNCTION BELOW
-        'keep *_particleFlowTmp_*_*',               ## KEEP REFERENCE TO reco::PFCandidate COLLECTION GIVEN AS INPUT TO addHLTPFTaus FUNCTION
-        'keep *_muons1stStep_*_*',                  ## KEEP REFERENCE TO reco::PFCandidate COLLECTION GIVEN AS INPUT TO addHLTPFTaus FUNCTION
-        'keep *_electronGsfTracks_*_*',             ## KEEP REFERENCE TO reco::PFCandidate COLLECTION GIVEN AS INPUT TO addHLTPFTaus FUNCTION
-        'keep *_generalTracks_*_*',                 ## KEEP REFERENCE TO reco::PFCandidate COLLECTION GIVEN AS INPUT TO addHLTPFTaus FUNCTION
-        'keep *_offlinePrimaryVertices_*_*',        ## KEEP REFERENCE TO reco::PFCandidate COLLECTION GIVEN AS INPUT TO addHLTPFTaus FUNCTION
-        'keep *_hltPhase2PixelVertices_*_*',        ## PRODUCED BELOW
-        'keep *_hltPhase2TrimmedPixelVertices_*_*', ## PRODUCED BELOW
-        'keep *_hltKT6PFJets_*_*',                  ## PRODUCED BELOW
-        'keep *_hltPFMET*_*_*',                     ## PRODUCED BELOW
-        'keep *_hltPuppiMET*_*_*',                  ## PRODUCED BELOW
-        'keep *_prunedGenParticles_*_*',            ## PRESENT ONLY IN MINIAOD/RECO
-        'keep *_ak4GenJets_*_*',                    ## PRESENT ONLY IN MINIAOD/RECO
-        'keep *_ak8GenJets_*_*',                    ## PRESENT ONLY IN MINIAOD/RECO
-        'keep *_slimmedGenJets__*',                 ## PRESENT ONLY IN MINIAOD/RECO
-        'keep *_slimmedTaus_*_*',                   ## PRESENT ONLY IN MINIAOD/RECO
-        'keep *_slimmedJets_*_*',                   ## PRESENT ONLY IN MINIAOD/RECO
-        'keep *_packedPFCandidates_*_*',            ## PRESENT ONLY IN MINIAOD/RECO
-        'keep *_slimmedAddPileupInfo_*_*',          ## PRESENT ONLY IN MINIAOD/RECO
-        'keep *_offlineSlimmedPrimaryVertices_*_*', ## PRESENT ONLY IN MINIAOD/RECO
-        'keep *_generatorSmeared_*_*',              ## CV: ALLOWS TO PRODUCE FULL COLLECTION OF genParticles FOR DEBUGGING PURPOSES 
-        'keep *_generator_*_*',                     ## CV: NEEDED TO MAKE PTHAT PLOTS FOR QCD MULTIJET MC SAMPLES
+        'keep *_ak4GenJets*_*_*',                     ## PRESENT ONLY IN RAW
+        'keep *_hltGtStage2Digis*_*_*',               ## PRESENT ONLY IN RAW
+        'keep *_hltTriggerSummaryRAW*_*_*',           ## PRESENT ONLY IN RAW
+        'keep *_ak4PFJetsCorrected*_*_*',             ## PRESENT ONLY IN MINIAOD/RECO
+        'keep *_hlt*Tau*_*_*',                        ## PRODUCED BY addHLTPFTaus FUNCTION BELOW
+        'keep *_particleFlowTmp_*_*',                 ## KEEP REFERENCE TO reco::PFCandidate COLLECTION GIVEN AS INPUT TO addHLTPFTaus FUNCTION
+        'keep *_muons1stStep_*_*',                    ## KEEP REFERENCE TO reco::PFCandidate COLLECTION GIVEN AS INPUT TO addHLTPFTaus FUNCTION
+        'keep *_electronGsfTracks_*_*',               ## KEEP REFERENCE TO reco::PFCandidate COLLECTION GIVEN AS INPUT TO addHLTPFTaus FUNCTION
+        'keep *_generalTracks_*_*',                   ## KEEP REFERENCE TO reco::PFCandidate COLLECTION GIVEN AS INPUT TO addHLTPFTaus FUNCTION
+        'keep *_offlinePrimaryVertices_*_*',          ## KEEP REFERENCE TO reco::PFCandidate COLLECTION GIVEN AS INPUT TO addHLTPFTaus FUNCTION
+        'keep *_hltPhase2PixelVertices_*_*',          ## PRODUCED BELOW
+        'keep *_hltPhase2TrimmedPixelVertices_*_*',   ## PRODUCED BELOW
+        'keep *_hltKT6PFJets_*_*',                    ## PRODUCED BELOW
+        'keep *_hltPFMET*_*_*',                       ## PRODUCED BELOW
+        'keep *_hltPuppiMET*_*_*',                    ## PRODUCED BELOW
+        'keep *_prunedGenParticles_*_*',              ## PRESENT ONLY IN MINIAOD/RECO
+        'keep *_ak4GenJets_*_*',                      ## PRESENT ONLY IN MINIAOD/RECO
+        'keep *_ak8GenJets_*_*',                      ## PRESENT ONLY IN MINIAOD/RECO
+        'keep *_slimmedGenJets__*',                   ## PRESENT ONLY IN MINIAOD/RECO
+        'keep *_slimmedTaus_*_*',                     ## PRESENT ONLY IN MINIAOD/RECO
+        'keep *_slimmedJets_*_*',                     ## PRESENT ONLY IN MINIAOD/RECO
+        'keep *_packedPFCandidates_*_*',              ## PRESENT ONLY IN MINIAOD/RECO
+        'keep *_slimmedAddPileupInfo_*_*',            ## PRESENT ONLY IN MINIAOD/RECO
+        'keep *_offlineSlimmedPrimaryVertices_*_*',   ## PRESENT ONLY IN MINIAOD/RECO
+        'keep *_generatorSmeared_*_*',                ## CV: ALLOWS TO PRODUCE FULL COLLECTION OF genParticles FOR DEBUGGING PURPOSES 
+        'keep *_generator_*_*',                       ## CV: NEEDED TO MAKE PTHAT PLOTS FOR QCD MULTIJET MC SAMPLES
     )
 )
 
@@ -171,7 +171,7 @@ process = customize_hltPhase2_TICL(process)
 
 #--------------------------------------------------------------------------------
 # CV: run HLT Pixel vertex reconstruction
-process.load("HLTTrigger.Phase2HLTPFTaus.hltPixelVertices_cff")
+process.load("HLTrigger.Phase2HLTPFTaus.hltPixelVertices_cff")
 process.reconstruction_step.replace(process.offlinePrimaryVertices, process.offlinePrimaryVertices + process.hltPhase2PixelTracksSequence + process.hltPhase2PixelVerticesSequence)
 
 # CV: switch vertex collection in particle-flow algorithm
@@ -186,7 +186,7 @@ if srcVertices != "offlinePrimaryVertices":
 process.taucustomreco = cms.Sequence()
 
 # run HLT tau reconstruction
-from HLTTrigger.Phase2HLTPFTaus.tools.addHLTPFTaus import addHLTPFTaus
+from HLTrigger.Phase2HLTPFTaus.tools.addHLTPFTaus import addHLTPFTaus
 srcPFCandidates = "particleFlowTmp"
 for algorithm in [ "hps", "shrinking-cone" ]:
   for isolation_maxDeltaZOption in [ "primaryVertex", "leadTrack" ]:
@@ -228,6 +228,9 @@ process.hltKT6PFJets = kt6PFJets.clone(
     doRhoFastjet = cms.bool(True)
 )
 process.reconstruction_step += process.hltKT6PFJets
+
+process.dumpEventContent = cms.EDAnalyzer('EventContentAnalyzer')
+process.reconstruction_step += process.dumpEventContent
 
 process.options = cms.untracked.PSet(
     wantSummary = cms.untracked.bool(True)

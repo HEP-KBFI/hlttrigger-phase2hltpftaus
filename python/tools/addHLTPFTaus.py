@@ -343,6 +343,14 @@ def addHLTPFTaus(process, algorithm, srcPFCandidates, srcVertices,
         pftauDiscriminators, pftauSequence)
     srcSelectedPFTaus = hltSelectedPFTaus.label()
 
+    requireDecayMode = cms.PSet(
+        BooleanOperator = cms.string("and"),
+        decayMode = cms.PSet(
+            Producer = cms.InputTag('hlt%ssPassingTrackFinding%s' % (pfTauLabel, suffix)),
+            cut = cms.double(0.5)
+        )
+    )
+
     # CV: do not cut on charged isolation, but store charged isolation pT-sum in output file instead
     hltPFTauChargedIsoPtSum = addPFTauDiscriminator(process, "hlt%sChargedIsoPtSum%s" % (pfTauLabel, suffix),
         cms.EDProducer("PFRecoTauDiscriminationByIsolation",
@@ -350,7 +358,8 @@ def addHLTPFTaus(process, algorithm, srcPFCandidates, srcVertices,
             particleFlowSrc = cms.InputTag(srcPFCandidates),
             vertexSrc = cms.InputTag(srcVertices),
             qualityCuts = hltQualityCuts,
-            Prediscriminants = noPrediscriminants,
+            ##Prediscriminants = noPrediscriminants,
+            Prediscriminants = requireDecayMode,
             ApplyDiscriminationByTrackerIsolation = cms.bool(True),
             ApplyDiscriminationByECALIsolation = cms.bool(False),
             ApplyDiscriminationByWeightedECALIsolation = cms.bool(False),

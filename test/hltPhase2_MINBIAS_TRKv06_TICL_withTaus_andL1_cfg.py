@@ -54,41 +54,41 @@ process.source = cms.Source("PoolSource",
         'file:/hdfs/cms/store/mc/Phase2HLTTDRWinter20RECOMiniAOD/MinBias_TuneCP5_14TeV-pythia8/MINIAODSIM/PU200_110X_mcRun4_realistic_v3-v1/110000/054D8F53-89B2-E143-B106-FD85AC2F1F4B.root'
     ),
     secondaryFileNames = cms.untracked.vstring(
-        'file:/hdfs/cms/store/mc/Phase2HLTTDRWinter20DIGI/MinBias_TuneCP5_14TeV-pythia8/GEN-SIM-DIGI-RAW/PU200_110X_mcRun4_realistic_v3-v1/110002/8A31EE8B-FC0F-A949-8340-58E2ABD2F30F.root',
-        'file:/hdfs/cms/store/mc/Phase2HLTTDRWinter20DIGI/MinBias_TuneCP5_14TeV-pythia8/GEN-SIM-DIGI-RAW/PU200_110X_mcRun4_realistic_v3-v1/110002/7CD16EEB-247E-A340-9C46-6345ECF18A82.root',
-        'file:/hdfs/cms/store/mc/Phase2HLTTDRWinter20DIGI/MinBias_TuneCP5_14TeV-pythia8/GEN-SIM-DIGI-RAW/PU200_110X_mcRun4_realistic_v3-v1/110002/7795313D-A909-354A-9226-41B90CDCF847.root',
-        'file:/hdfs/cms/store/mc/Phase2HLTTDRWinter20DIGI/MinBias_TuneCP5_14TeV-pythia8/GEN-SIM-DIGI-RAW/PU200_110X_mcRun4_realistic_v3-v1/110002/6920F67D-2E85-7D4E-835D-C7B76479E559.root',
-        'file:/hdfs/cms/store/mc/Phase2HLTTDRWinter20DIGI/MinBias_TuneCP5_14TeV-pythia8/GEN-SIM-DIGI-RAW/PU200_110X_mcRun4_realistic_v3-v1/110002/56CB55A4-4E1C-F04B-8693-FD79CD1D5986.root',
-        'file:/hdfs/cms/store/mc/Phase2HLTTDRWinter20DIGI/MinBias_TuneCP5_14TeV-pythia8/GEN-SIM-DIGI-RAW/PU200_110X_mcRun4_realistic_v3-v1/110002/49726925-BB46-304E-B1C5-8518C1CB2BDB.root',
-        'file:/hdfs/cms/store/mc/Phase2HLTTDRWinter20DIGI/MinBias_TuneCP5_14TeV-pythia8/GEN-SIM-DIGI-RAW/PU200_110X_mcRun4_realistic_v3-v1/110002/46BDEEBE-B254-E044-B0BA-CF5C030D564A.root',
-        'file:/hdfs/cms/store/mc/Phase2HLTTDRWinter20DIGI/MinBias_TuneCP5_14TeV-pythia8/GEN-SIM-DIGI-RAW/PU200_110X_mcRun4_realistic_v3-v1/110002/4497DDB7-BE79-D047-9CAF-05A5FF96D4B4.root',
-        'file:/hdfs/cms/store/mc/Phase2HLTTDRWinter20DIGI/MinBias_TuneCP5_14TeV-pythia8/GEN-SIM-DIGI-RAW/PU200_110X_mcRun4_realistic_v3-v1/110002/87F38519-6E6B-9444-836C-9597AA3152A2.root',
-        'file:/hdfs/cms/store/mc/Phase2HLTTDRWinter20DIGI/MinBias_TuneCP5_14TeV-pythia8/GEN-SIM-DIGI-RAW/PU200_110X_mcRun4_realistic_v3-v1/110002/061AB47E-D89E-C14B-9948-7CDB3367BD9B.root',
-        'file:/hdfs/cms/store/mc/Phase2HLTTDRWinter20DIGI/MinBias_TuneCP5_14TeV-pythia8/GEN-SIM-DIGI-RAW/PU200_110X_mcRun4_realistic_v3-v1/110002/1BE20D65-DC91-984B-9892-215E72AB5757.root',
-        'file:/hdfs/cms/store/mc/Phase2HLTTDRWinter20DIGI/MinBias_TuneCP5_14TeV-pythia8/GEN-SIM-DIGI-RAW/PU200_110X_mcRun4_realistic_v3-v1/110002/1EC9A6C4-23A7-C048-9182-9E8FB7ED942A.root',
-        'file:/hdfs/cms/store/mc/Phase2HLTTDRWinter20DIGI/MinBias_TuneCP5_14TeV-pythia8/GEN-SIM-DIGI-RAW/PU200_110X_mcRun4_realistic_v3-v1/110001/3C2BDEAE-6D19-3A48-9AC8-6BC2F555DF1F.root',
-        'file:/hdfs/cms/store/mc/Phase2HLTTDRWinter20DIGI/MinBias_TuneCP5_14TeV-pythia8/GEN-SIM-DIGI-RAW/PU200_110X_mcRun4_realistic_v3-v1/110002/0E00FF93-32FF-FD4C-989F-3A0C5FA653C1.root',
+        #'file:/hdfs/cms/store/mc/Phase2HLTTDRWinter20DIGI/MinBias_TuneCP5_14TeV-pythia8/GEN-SIM-DIGI-RAW/PU200_110X_mcRun4_realistic_v3-v1/110002/8A31EE8B-FC0F-A949-8340-58E2ABD2F30F.root',
+        #'file:/hdfs/cms/store/mc/Phase2HLTTDRWinter20DIGI/MinBias_TuneCP5_14TeV-pythia8/GEN-SIM-DIGI-RAW/PU200_110X_mcRun4_realistic_v3-v1/110002/7CD16EEB-247E-A340-9C46-6345ECF18A82.root',
+        #'file:/hdfs/cms/store/mc/Phase2HLTTDRWinter20DIGI/MinBias_TuneCP5_14TeV-pythia8/GEN-SIM-DIGI-RAW/PU200_110X_mcRun4_realistic_v3-v1/110002/7795313D-A909-354A-9226-41B90CDCF847.root',
+        #'file:/hdfs/cms/store/mc/Phase2HLTTDRWinter20DIGI/MinBias_TuneCP5_14TeV-pythia8/GEN-SIM-DIGI-RAW/PU200_110X_mcRun4_realistic_v3-v1/110002/6920F67D-2E85-7D4E-835D-C7B76479E559.root',
+        #'file:/hdfs/cms/store/mc/Phase2HLTTDRWinter20DIGI/MinBias_TuneCP5_14TeV-pythia8/GEN-SIM-DIGI-RAW/PU200_110X_mcRun4_realistic_v3-v1/110002/56CB55A4-4E1C-F04B-8693-FD79CD1D5986.root',
+        #'file:/hdfs/cms/store/mc/Phase2HLTTDRWinter20DIGI/MinBias_TuneCP5_14TeV-pythia8/GEN-SIM-DIGI-RAW/PU200_110X_mcRun4_realistic_v3-v1/110002/49726925-BB46-304E-B1C5-8518C1CB2BDB.root',
+        #'file:/hdfs/cms/store/mc/Phase2HLTTDRWinter20DIGI/MinBias_TuneCP5_14TeV-pythia8/GEN-SIM-DIGI-RAW/PU200_110X_mcRun4_realistic_v3-v1/110002/46BDEEBE-B254-E044-B0BA-CF5C030D564A.root',
+        #'file:/hdfs/cms/store/mc/Phase2HLTTDRWinter20DIGI/MinBias_TuneCP5_14TeV-pythia8/GEN-SIM-DIGI-RAW/PU200_110X_mcRun4_realistic_v3-v1/110002/4497DDB7-BE79-D047-9CAF-05A5FF96D4B4.root',
+        #'file:/hdfs/cms/store/mc/Phase2HLTTDRWinter20DIGI/MinBias_TuneCP5_14TeV-pythia8/GEN-SIM-DIGI-RAW/PU200_110X_mcRun4_realistic_v3-v1/110002/87F38519-6E6B-9444-836C-9597AA3152A2.root',
+        #'file:/hdfs/cms/store/mc/Phase2HLTTDRWinter20DIGI/MinBias_TuneCP5_14TeV-pythia8/GEN-SIM-DIGI-RAW/PU200_110X_mcRun4_realistic_v3-v1/110002/061AB47E-D89E-C14B-9948-7CDB3367BD9B.root',
+        #'file:/hdfs/cms/store/mc/Phase2HLTTDRWinter20DIGI/MinBias_TuneCP5_14TeV-pythia8/GEN-SIM-DIGI-RAW/PU200_110X_mcRun4_realistic_v3-v1/110002/1BE20D65-DC91-984B-9892-215E72AB5757.root',
+        #'file:/hdfs/cms/store/mc/Phase2HLTTDRWinter20DIGI/MinBias_TuneCP5_14TeV-pythia8/GEN-SIM-DIGI-RAW/PU200_110X_mcRun4_realistic_v3-v1/110002/1EC9A6C4-23A7-C048-9182-9E8FB7ED942A.root',
+        #'file:/hdfs/cms/store/mc/Phase2HLTTDRWinter20DIGI/MinBias_TuneCP5_14TeV-pythia8/GEN-SIM-DIGI-RAW/PU200_110X_mcRun4_realistic_v3-v1/110001/3C2BDEAE-6D19-3A48-9AC8-6BC2F555DF1F.root',
+        #'file:/hdfs/cms/store/mc/Phase2HLTTDRWinter20DIGI/MinBias_TuneCP5_14TeV-pythia8/GEN-SIM-DIGI-RAW/PU200_110X_mcRun4_realistic_v3-v1/110002/0E00FF93-32FF-FD4C-989F-3A0C5FA653C1.root',
         'file:/hdfs/cms/store/mc/Phase2HLTTDRWinter20DIGI/MinBias_TuneCP5_14TeV-pythia8/GEN-SIM-DIGI-RAW/PU200_110X_mcRun4_realistic_v3-v1/110002/534D3139-A254-E24B-A125-3C176575E2DB.root',
-        'file:/hdfs/cms/store/mc/Phase2HLTTDRWinter20DIGI/MinBias_TuneCP5_14TeV-pythia8/GEN-SIM-DIGI-RAW/PU200_110X_mcRun4_realistic_v3-v1/110002/B6EDAEB7-BCF6-004C-AD7C-114ED961F96B.root',
-        'file:/hdfs/cms/store/mc/Phase2HLTTDRWinter20DIGI/MinBias_TuneCP5_14TeV-pythia8/GEN-SIM-DIGI-RAW/PU200_110X_mcRun4_realistic_v3-v1/110002/2F2FD1CF-BC4E-C446-BA43-A55DFD616495.root',
-        'file:/hdfs/cms/store/mc/Phase2HLTTDRWinter20DIGI/MinBias_TuneCP5_14TeV-pythia8/GEN-SIM-DIGI-RAW/PU200_110X_mcRun4_realistic_v3-v1/110002/B67BDC43-0F45-4A4A-B97C-B4926D262C9F.root',
-        'file:/hdfs/cms/store/mc/Phase2HLTTDRWinter20DIGI/MinBias_TuneCP5_14TeV-pythia8/GEN-SIM-DIGI-RAW/PU200_110X_mcRun4_realistic_v3-v1/110002/E3B48CFD-B0AA-D04E-958A-472D3BD7C5E7.root',
-        'file:/hdfs/cms/store/mc/Phase2HLTTDRWinter20DIGI/MinBias_TuneCP5_14TeV-pythia8/GEN-SIM-DIGI-RAW/PU200_110X_mcRun4_realistic_v3-v1/110002/BD8132F5-E3F5-2C4D-BD6A-6FD057E77122.root',
-        'file:/hdfs/cms/store/mc/Phase2HLTTDRWinter20DIGI/MinBias_TuneCP5_14TeV-pythia8/GEN-SIM-DIGI-RAW/PU200_110X_mcRun4_realistic_v3-v1/110002/A62403FD-AFBC-3D47-BCE6-DE8F9594CA6F.root',
-        'file:/hdfs/cms/store/mc/Phase2HLTTDRWinter20DIGI/MinBias_TuneCP5_14TeV-pythia8/GEN-SIM-DIGI-RAW/PU200_110X_mcRun4_realistic_v3-v1/110002/6F3F0A0A-59A1-7D49-B4BC-E11A4F662A67.root',
-        'file:/hdfs/cms/store/mc/Phase2HLTTDRWinter20DIGI/MinBias_TuneCP5_14TeV-pythia8/GEN-SIM-DIGI-RAW/PU200_110X_mcRun4_realistic_v3-v1/110002/4F3FFE77-9E3A-0B43-A2F5-546EF6F69552.root',
-        'file:/hdfs/cms/store/mc/Phase2HLTTDRWinter20DIGI/MinBias_TuneCP5_14TeV-pythia8/GEN-SIM-DIGI-RAW/PU200_110X_mcRun4_realistic_v3-v1/110002/C235BF90-10BE-AB48-A717-A9BD1625EA5B.root',
-        'file:/hdfs/cms/store/mc/Phase2HLTTDRWinter20DIGI/MinBias_TuneCP5_14TeV-pythia8/GEN-SIM-DIGI-RAW/PU200_110X_mcRun4_realistic_v3-v1/110002/A8D780B8-0E4B-A44E-96AF-CEBFA2A39EDF.root',
-        'file:/hdfs/cms/store/mc/Phase2HLTTDRWinter20DIGI/MinBias_TuneCP5_14TeV-pythia8/GEN-SIM-DIGI-RAW/PU200_110X_mcRun4_realistic_v3-v1/110002/B4758DB4-B280-9445-9E8D-B852B73391EC.root',
-        'file:/hdfs/cms/store/mc/Phase2HLTTDRWinter20DIGI/MinBias_TuneCP5_14TeV-pythia8/GEN-SIM-DIGI-RAW/PU200_110X_mcRun4_realistic_v3-v1/110002/8A65476E-E45D-E04B-95F9-66800ACA1714.root',
-        'file:/hdfs/cms/store/mc/Phase2HLTTDRWinter20DIGI/MinBias_TuneCP5_14TeV-pythia8/GEN-SIM-DIGI-RAW/PU200_110X_mcRun4_realistic_v3-v1/110002/89426CC6-3809-9E45-A578-E64C2E7D3B07.root',
-        'file:/hdfs/cms/store/mc/Phase2HLTTDRWinter20DIGI/MinBias_TuneCP5_14TeV-pythia8/GEN-SIM-DIGI-RAW/PU200_110X_mcRun4_realistic_v3-v1/110002/B59E0FE9-CE72-7E43-A814-5FE7DD15E854.root',
-        'file:/hdfs/cms/store/mc/Phase2HLTTDRWinter20DIGI/MinBias_TuneCP5_14TeV-pythia8/GEN-SIM-DIGI-RAW/PU200_110X_mcRun4_realistic_v3-v1/110002/BE759C01-AE6C-A84B-BA93-E76BD7D6F016.root',
-        'file:/hdfs/cms/store/mc/Phase2HLTTDRWinter20DIGI/MinBias_TuneCP5_14TeV-pythia8/GEN-SIM-DIGI-RAW/PU200_110X_mcRun4_realistic_v3-v1/110002/A58A5451-981C-1447-96CD-8B9C5C734024.root',
-        'file:/hdfs/cms/store/mc/Phase2HLTTDRWinter20DIGI/MinBias_TuneCP5_14TeV-pythia8/GEN-SIM-DIGI-RAW/PU200_110X_mcRun4_realistic_v3-v1/110002/ECF64A08-DAA8-1D47-86CE-3B1F630372A2.root',
-        'file:/hdfs/cms/store/mc/Phase2HLTTDRWinter20DIGI/MinBias_TuneCP5_14TeV-pythia8/GEN-SIM-DIGI-RAW/PU200_110X_mcRun4_realistic_v3-v1/110002/4BCFDBF1-7692-5B45-AFAD-740E349A1B5F.root',
-        'file:/hdfs/cms/store/mc/Phase2HLTTDRWinter20DIGI/MinBias_TuneCP5_14TeV-pythia8/GEN-SIM-DIGI-RAW/PU200_110X_mcRun4_realistic_v3-v1/110002/EDADE3F7-34D0-5544-A61F-BCF27308D5D9.root',
-        'file:/hdfs/cms/store/mc/Phase2HLTTDRWinter20DIGI/MinBias_TuneCP5_14TeV-pythia8/GEN-SIM-DIGI-RAW/PU200_110X_mcRun4_realistic_v3-v1/110002/381C2BBE-366A-384E-97AF-BFF7AAFD8C9E.root'
+        #'file:/hdfs/cms/store/mc/Phase2HLTTDRWinter20DIGI/MinBias_TuneCP5_14TeV-pythia8/GEN-SIM-DIGI-RAW/PU200_110X_mcRun4_realistic_v3-v1/110002/B6EDAEB7-BCF6-004C-AD7C-114ED961F96B.root',
+        #'file:/hdfs/cms/store/mc/Phase2HLTTDRWinter20DIGI/MinBias_TuneCP5_14TeV-pythia8/GEN-SIM-DIGI-RAW/PU200_110X_mcRun4_realistic_v3-v1/110002/2F2FD1CF-BC4E-C446-BA43-A55DFD616495.root',
+        #'file:/hdfs/cms/store/mc/Phase2HLTTDRWinter20DIGI/MinBias_TuneCP5_14TeV-pythia8/GEN-SIM-DIGI-RAW/PU200_110X_mcRun4_realistic_v3-v1/110002/B67BDC43-0F45-4A4A-B97C-B4926D262C9F.root',
+        #'file:/hdfs/cms/store/mc/Phase2HLTTDRWinter20DIGI/MinBias_TuneCP5_14TeV-pythia8/GEN-SIM-DIGI-RAW/PU200_110X_mcRun4_realistic_v3-v1/110002/E3B48CFD-B0AA-D04E-958A-472D3BD7C5E7.root',
+        #'file:/hdfs/cms/store/mc/Phase2HLTTDRWinter20DIGI/MinBias_TuneCP5_14TeV-pythia8/GEN-SIM-DIGI-RAW/PU200_110X_mcRun4_realistic_v3-v1/110002/BD8132F5-E3F5-2C4D-BD6A-6FD057E77122.root',
+        #'file:/hdfs/cms/store/mc/Phase2HLTTDRWinter20DIGI/MinBias_TuneCP5_14TeV-pythia8/GEN-SIM-DIGI-RAW/PU200_110X_mcRun4_realistic_v3-v1/110002/A62403FD-AFBC-3D47-BCE6-DE8F9594CA6F.root',
+        #'file:/hdfs/cms/store/mc/Phase2HLTTDRWinter20DIGI/MinBias_TuneCP5_14TeV-pythia8/GEN-SIM-DIGI-RAW/PU200_110X_mcRun4_realistic_v3-v1/110002/6F3F0A0A-59A1-7D49-B4BC-E11A4F662A67.root',
+        #'file:/hdfs/cms/store/mc/Phase2HLTTDRWinter20DIGI/MinBias_TuneCP5_14TeV-pythia8/GEN-SIM-DIGI-RAW/PU200_110X_mcRun4_realistic_v3-v1/110002/4F3FFE77-9E3A-0B43-A2F5-546EF6F69552.root',
+        #'file:/hdfs/cms/store/mc/Phase2HLTTDRWinter20DIGI/MinBias_TuneCP5_14TeV-pythia8/GEN-SIM-DIGI-RAW/PU200_110X_mcRun4_realistic_v3-v1/110002/C235BF90-10BE-AB48-A717-A9BD1625EA5B.root',
+        #'file:/hdfs/cms/store/mc/Phase2HLTTDRWinter20DIGI/MinBias_TuneCP5_14TeV-pythia8/GEN-SIM-DIGI-RAW/PU200_110X_mcRun4_realistic_v3-v1/110002/A8D780B8-0E4B-A44E-96AF-CEBFA2A39EDF.root',
+        #'file:/hdfs/cms/store/mc/Phase2HLTTDRWinter20DIGI/MinBias_TuneCP5_14TeV-pythia8/GEN-SIM-DIGI-RAW/PU200_110X_mcRun4_realistic_v3-v1/110002/B4758DB4-B280-9445-9E8D-B852B73391EC.root',
+        #'file:/hdfs/cms/store/mc/Phase2HLTTDRWinter20DIGI/MinBias_TuneCP5_14TeV-pythia8/GEN-SIM-DIGI-RAW/PU200_110X_mcRun4_realistic_v3-v1/110002/8A65476E-E45D-E04B-95F9-66800ACA1714.root',
+        #'file:/hdfs/cms/store/mc/Phase2HLTTDRWinter20DIGI/MinBias_TuneCP5_14TeV-pythia8/GEN-SIM-DIGI-RAW/PU200_110X_mcRun4_realistic_v3-v1/110002/89426CC6-3809-9E45-A578-E64C2E7D3B07.root',
+        #'file:/hdfs/cms/store/mc/Phase2HLTTDRWinter20DIGI/MinBias_TuneCP5_14TeV-pythia8/GEN-SIM-DIGI-RAW/PU200_110X_mcRun4_realistic_v3-v1/110002/B59E0FE9-CE72-7E43-A814-5FE7DD15E854.root',
+        #'file:/hdfs/cms/store/mc/Phase2HLTTDRWinter20DIGI/MinBias_TuneCP5_14TeV-pythia8/GEN-SIM-DIGI-RAW/PU200_110X_mcRun4_realistic_v3-v1/110002/BE759C01-AE6C-A84B-BA93-E76BD7D6F016.root',
+        #'file:/hdfs/cms/store/mc/Phase2HLTTDRWinter20DIGI/MinBias_TuneCP5_14TeV-pythia8/GEN-SIM-DIGI-RAW/PU200_110X_mcRun4_realistic_v3-v1/110002/A58A5451-981C-1447-96CD-8B9C5C734024.root',
+        #'file:/hdfs/cms/store/mc/Phase2HLTTDRWinter20DIGI/MinBias_TuneCP5_14TeV-pythia8/GEN-SIM-DIGI-RAW/PU200_110X_mcRun4_realistic_v3-v1/110002/ECF64A08-DAA8-1D47-86CE-3B1F630372A2.root',
+        #'file:/hdfs/cms/store/mc/Phase2HLTTDRWinter20DIGI/MinBias_TuneCP5_14TeV-pythia8/GEN-SIM-DIGI-RAW/PU200_110X_mcRun4_realistic_v3-v1/110002/4BCFDBF1-7692-5B45-AFAD-740E349A1B5F.root',
+        #'file:/hdfs/cms/store/mc/Phase2HLTTDRWinter20DIGI/MinBias_TuneCP5_14TeV-pythia8/GEN-SIM-DIGI-RAW/PU200_110X_mcRun4_realistic_v3-v1/110002/EDADE3F7-34D0-5544-A61F-BCF27308D5D9.root',
+        #'file:/hdfs/cms/store/mc/Phase2HLTTDRWinter20DIGI/MinBias_TuneCP5_14TeV-pythia8/GEN-SIM-DIGI-RAW/PU200_110X_mcRun4_realistic_v3-v1/110002/381C2BBE-366A-384E-97AF-BFF7AAFD8C9E.root'
     )
 )
 
@@ -143,48 +143,48 @@ process.RECOoutput = cms.OutputModule("PoolOutputModule",
     ),
     outputCommands = cms.untracked.vstring(
         'drop *',
-        'keep *_ak4GenJets*_*_*',                   ## PRESENT ONLY IN RAW
-        'keep *_hltGtStage2Digis*_*_*',             ## PRESENT ONLY IN RAW
-        'keep *_hltTriggerSummaryRAW*_*_*',         ## PRESENT ONLY IN RAW
-        'keep *_ak4PFJetsCorrected*_*_*',           ## PRESENT ONLY IN MINIAOD/RECO
-        'keep *_hlt*Tau*_*_*',                      ## PRODUCED BY addHLTPFTaus FUNCTION BELOW
-        'keep *_particleFlowTmp_*_*',               ## KEEP REFERENCE TO reco::PFCandidate COLLECTION GIVEN AS INPUT TO addHLTPFTaus FUNCTION
-        'keep *_muons1stStep_*_*',                  ## KEEP REFERENCE TO reco::PFCandidate COLLECTION GIVEN AS INPUT TO addHLTPFTaus FUNCTION
-        'keep *_electronGsfTracks_*_*',             ## KEEP REFERENCE TO reco::PFCandidate COLLECTION GIVEN AS INPUT TO addHLTPFTaus FUNCTION
-        'keep *_generalTracks_*_*',                 ## KEEP REFERENCE TO reco::PFCandidate COLLECTION GIVEN AS INPUT TO addHLTPFTaus FUNCTION
-        'keep *_offlinePrimaryVertices_*_*',        ## KEEP REFERENCE TO reco::PFCandidate COLLECTION GIVEN AS INPUT TO addHLTPFTaus FUNCTION
-        'keep *_hltPhase2PixelVertices_*_*',        ## PRODUCED BELOW
-        'keep *_hltPhase2TrimmedPixelVertices_*_*', ## PRODUCED BELOW
-        'keep *_hltKT6PFJets_*_*',                  ## PRODUCED BELOW
-        'keep *_hltPFMET*_*_*',                     ## PRODUCED BELOW
-        'keep *_hltPuppiMET*_*_*',                  ## PRODUCED BELOW
-        'keep *_prunedGenParticles_*_*',            ## PRESENT ONLY IN MINIAOD/RECO
-        'keep *_ak4GenJets_*_*',                    ## PRESENT ONLY IN MINIAOD/RECO
-        'keep *_ak8GenJets_*_*',                    ## PRESENT ONLY IN MINIAOD/RECO
-        'keep *_slimmedGenJets__*',                 ## PRESENT ONLY IN MINIAOD/RECO
-        'keep *_slimmedTaus_*_*',                   ## PRESENT ONLY IN MINIAOD/RECO
-        'keep *_slimmedJets_*_*',                   ## PRESENT ONLY IN MINIAOD/RECO
-        'keep *_packedPFCandidates_*_*',            ## PRESENT ONLY IN MINIAOD/RECO
-        'keep *_slimmedAddPileupInfo_*_*',          ## PRESENT ONLY IN MINIAOD/RECO
-        'keep *_offlineSlimmedPrimaryVertices_*_*', ## PRESENT ONLY IN MINIAOD/RECO
-        'keep *_generatorSmeared_*_*',              ## CV: ALLOWS TO PRODUCE FULL COLLECTION OF genParticles FOR DEBUGGING PURPOSES 
-        'keep *_generator_*_*',                     ## CV: NEEDED TO MAKE PTHAT PLOTS FOR QCD MULTIJET MC SAMPLES
-        'keep *_L1HPSPFTauProducer*PF_*_*',         ## ADDED BY L1 EMULATOR
-        'keep *_l1pfCandidates_PF_*',               ## ADDED BY L1 EMULATOR
-        'keep *_l1pfProducer*_z0_*',                ## ADDED BY L1 EMULATOR
-        'keep *_pfTracksFromL1Tracks*_*_*',         ## ADDED BY L1 EMULATOR
-        'keep *_pfClustersFrom*_*_*',               ## ADDED BY L1 EMULATOR 
-        'keep *_TTTracksFromTracklet_*_*',          ## ADDED BY L1 EMULATOR
-        'keep *_VertexProducer_*_*',                ## ADDED BY L1 EMULATOR
-        'keep *_ak4PFL1PF_*_*',                     ## ADDED BY L1 EMULATOR
-        'keep *_ak4PFL1PFCorrected_*_*',            ## ADDED BY L1 EMULATOR
-        'keep *_kt6L1PFJetsPF_rho_*',               ## ADDED BY L1 EMULATOR
-        'keep *_kt6L1PFJetsNeutralsPF_rho_*',       ## ADDED BY L1 EMULATOR        
-        'keep *_l1pfCandidates_PF_*',               ## ADDED BY L1 EMULATOR   
-        'keep *_l1pfCandidates_Puppi_*',            ## ADDED BY L1 EMULATOR   
-        'keep *_L1TkPrimaryVertex_*_*',             ## ADDED BY L1 EMULATOR
-        'keep *_L1HPSPFTauProducer*PF_*_*',         ## ADDED BY L1 EMULATOR
-        'keep *_L1HPSPFTauProducer*Puppi_*_*',      ## ADDED BY L1 EMULATOR
+        'keep *_ak4GenJets*_*_*',                     ## PRESENT ONLY IN RAW
+        'keep *_hltGtStage2Digis*_*_*',               ## PRESENT ONLY IN RAW
+        'keep *_hltTriggerSummaryRAW*_*_*',           ## PRESENT ONLY IN RAW
+        'keep *_ak4PFJetsCorrected*_*_*',             ## PRESENT ONLY IN MINIAOD/RECO
+        'keep *_hlt*Tau*_*_*',                        ## PRODUCED BY addHLTPFTaus FUNCTION BELOW
+        'keep *_particleFlowTmp_*_*',                 ## KEEP REFERENCE TO reco::PFCandidate COLLECTION GIVEN AS INPUT TO addHLTPFTaus FUNCTION
+        'keep *_muons1stStep_*_*',                    ## KEEP REFERENCE TO reco::PFCandidate COLLECTION GIVEN AS INPUT TO addHLTPFTaus FUNCTION
+        'keep *_electronGsfTracks_*_*',               ## KEEP REFERENCE TO reco::PFCandidate COLLECTION GIVEN AS INPUT TO addHLTPFTaus FUNCTION
+        'keep *_generalTracks_*_*',                   ## KEEP REFERENCE TO reco::PFCandidate COLLECTION GIVEN AS INPUT TO addHLTPFTaus FUNCTION
+        'keep *_offlinePrimaryVertices_*_*',          ## KEEP REFERENCE TO reco::PFCandidate COLLECTION GIVEN AS INPUT TO addHLTPFTaus FUNCTION
+        'keep *_hltPhase2PixelVertices_*_*',          ## PRODUCED BELOW
+        'keep *_hltPhase2TrimmedPixelVertices_*_*',   ## PRODUCED BELOW
+        'keep *_hltKT6PFJets_*_*',                    ## PRODUCED BELOW
+        'keep *_hltPFMET*_*_*',                       ## PRODUCED BELOW
+        'keep *_hltPuppiMET*_*_*',                    ## PRODUCED BELOW
+        'keep *_prunedGenParticles_*_*',              ## PRESENT ONLY IN MINIAOD/RECO
+        'keep *_ak4GenJets_*_*',                      ## PRESENT ONLY IN MINIAOD/RECO
+        'keep *_ak8GenJets_*_*',                      ## PRESENT ONLY IN MINIAOD/RECO
+        'keep *_slimmedGenJets__*',                   ## PRESENT ONLY IN MINIAOD/RECO
+        'keep *_slimmedTaus_*_*',                     ## PRESENT ONLY IN MINIAOD/RECO
+        'keep *_slimmedJets_*_*',                     ## PRESENT ONLY IN MINIAOD/RECO
+        'keep *_packedPFCandidates_*_*',              ## PRESENT ONLY IN MINIAOD/RECO
+        'keep *_slimmedAddPileupInfo_*_*',            ## PRESENT ONLY IN MINIAOD/RECO
+        'keep *_offlineSlimmedPrimaryVertices_*_*',   ## PRESENT ONLY IN MINIAOD/RECO
+        'keep *_generatorSmeared_*_*',                ## CV: ALLOWS TO PRODUCE FULL COLLECTION OF genParticles FOR DEBUGGING PURPOSES 
+        'keep *_generator_*_*',                       ## CV: NEEDED TO MAKE PTHAT PLOTS FOR QCD MULTIJET MC SAMPLES
+        'keep *_L1HPSPFTauProducer*PF_*_*',           ## ADDED BY L1 EMULATOR
+        'keep *_l1pfCandidates_PF_*',                 ## ADDED BY L1 EMULATOR
+        'keep *_l1pfProducer*_z0_*',                  ## ADDED BY L1 EMULATOR
+        'keep *_pfTracksFromL1Tracks*_*_*',           ## ADDED BY L1 EMULATOR
+        'keep *_pfClustersFrom*_*_*',                 ## ADDED BY L1 EMULATOR 
+        'keep *_TTTracksFromTracklet_*_*',            ## ADDED BY L1 EMULATOR
+        'keep *_VertexProducer_*_*',                  ## ADDED BY L1 EMULATOR
+        'keep *_ak4PFL1PF_*_*',                       ## ADDED BY L1 EMULATOR
+        'keep *_ak4PFL1PFCorrected_*_*',              ## ADDED BY L1 EMULATOR
+        'keep *_kt6L1PFJetsPF_rho_*',                 ## ADDED BY L1 EMULATOR
+        'keep *_kt6L1PFJetsNeutralsPF_rho_*',         ## ADDED BY L1 EMULATOR        
+        'keep *_l1pfCandidates_PF_*',                 ## ADDED BY L1 EMULATOR   
+        'keep *_l1pfCandidates_Puppi_*',              ## ADDED BY L1 EMULATOR   
+        'keep *_L1TkPrimaryVertex_*_*',               ## ADDED BY L1 EMULATOR
+        'keep *_L1HPSPFTauProducer*PF_*_*',           ## ADDED BY L1 EMULATOR
+        'keep *_L1HPSPFTauProducer*Puppi_*_*',        ## ADDED BY L1 EMULATOR
     )
 )
 
@@ -313,6 +313,9 @@ if runL1Emulator:
 
     process.reconstruction_step += process.l1emulatorSequence
 #--------------------------------------------------------------------------------
+
+process.dumpEventContent = cms.EDAnalyzer('EventContentAnalyzer')
+process.reconstruction_step += process.dumpEventContent
 
 process.options = cms.untracked.PSet(
     wantSummary = cms.untracked.bool(True)
