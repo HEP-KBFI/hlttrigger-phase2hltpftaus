@@ -14,7 +14,11 @@ from RecoTauTag.RecoTau.RecoTauCleaner_cfi import RecoTauCleaner
 import RecoTauTag.RecoTau.RecoTauCleanerPlugins as cleaners
 from RecoTauTag.RecoTau.RecoTauPiZeroUnembedder_cfi import RecoTauPiZeroUnembedder
 from RecoTauTag.RecoTau.PFRecoTauDiscriminationByLeadingObjectPtCut_cfi import pfRecoTauDiscriminationByLeadingObjectPtCut
+from RecoTauTag.RecoTau.PFRecoTauDiscriminationByIsolation_cfi import pfRecoTauDiscriminationByIsolation
 from RecoTauTag.RecoTau.TauDiscriminatorTools import noPrediscriminants
+from RecoTauTag.RecoTau.PFTauPrimaryVertexProducer_cfi import PFTauPrimaryVertexProducer
+from RecoTauTag.RecoTau.PFTauSecondaryVertexProducer_cfi import PFTauSecondaryVertexProducer
+from RecoTauTag.RecoTau.PFTauTransverseImpactParameters_cfi import PFTauTransverseImpactParameters
 
 #----------------------------------------------------------------------------------------------------
 # Define parameters of "hadron-plus-strips" (HPS) and shrinking-cone (SC) tau reconstruction algorithms
@@ -42,10 +46,9 @@ minTauPt              = 15.0
 maxTauAbsEta          =  3.0
 #----------------------------------------------------------------------------------------------------
 
-def addPFTauDiscriminator(process, discriminatorName, discriminator, pftauDiscriminators, pftauSequence):
+def addPFTauDiscriminator(process, discriminatorName, discriminator, pftauSequence):
     setattr(process, discriminatorName, discriminator)
     pftauSequence += discriminator
-    pftauDiscriminators.append(discriminatorName)
     return discriminator
 
 def addPFTauSelector(process, selectorName, srcPFTaus, pftauDiscriminators, pftauSequence):
@@ -64,23 +67,13 @@ def addPFTauSelector(process, selectorName, srcPFTaus, pftauDiscriminators, pfta
 #----------------------------------------------------------------------------------------------------
 # CV: add additional tauID discriminators and tau lifetime information for DeepTau training
 
-def addPFTauDiscriminatorsForDeepTau(process, srcPFTaus, pftauQualityCuts, pftauDiscriminators, pftauSequence):
+def addPFTauDiscriminatorsForDeepTau(process, 
+                                     srcPFTaus, srcPFCandidates, srcVertices, 
+                                     pftauQualityCuts,
+                                     pftauSequence, 
+                                     pfTauLabel, suffix):
 
-    addPFTauDiscriminator(process, "hlt%sDiscriminationByDecayModeFinding%s" % (pfTauLabel, suffix),
-        hpsSelectionDiscriminator.clone(
-            PFTauProducer = cms.InputTag(srcPFTaus),
-            decayModes = cms.VPSet(
-                decayMode_1Prong0Pi0,
-                decayMode_1Prong1Pi0,
-                decayMode_1Prong2Pi0,
-                decayMode_3Prong0Pi0
-            ),
-            requireTauChargedHadronsToBeChargedPFCands = cms.bool(True),
-            minPixelHits = cms.int32(1)
-        ),
-        pftauDiscriminators, pftauSequence)
-
-    addPFTauDiscriminator(process, "hlt%sDiscriminationByDecayModeFindingNewDMs%s" % (pfTauLabel, suffix),
+    hltPFTauDiscriminationByDecayModeFindingNewDMs = addPFTauDiscriminator(process, "hlt%sDiscriminationByDecayModeFindingNewDMs%s" % (pfTauLabel, suffix),
         hpsSelectionDiscriminator.clone(
             PFTauProducer = cms.InputTag(srcPFTaus),
             decayModes = cms.VPSet(
@@ -95,123 +88,119 @@ def addPFTauDiscriminatorsForDeepTau(process, srcPFTaus, pftauQualityCuts, pftau
             requireTauChargedHadronsToBeChargedPFCands = cms.bool(True),
             minPixelHits = cms.int32(1)
         ),
-        pftauDiscriminators, pftauSequence)
+        pftauSequence)
+    srcPFTauDiscriminationByDecayModeFindingNewDMs = hltPFTauDiscriminationByDecayModeFindingNewDMs.label()
 
-    
-
-from RecoTauTag.RecoTau.PFRecoTauDiscriminationByLeadingObjectPtCut_cfi import pfRecoTauDiscriminationByLeadingObjectPtCut
-process.hltPFTauDiscriminationByTrackFinding = pfRecoTauDiscriminationByLeadingObjectPtCut.clone(
-     PFTauProducer = cms.InputTag(srcPFTaus),
-     UseOnlyChargedHadrons = cms.bool(True),
-     MinPtLeadingObject = cms.double(0.0)
-)
-process.productionSequence += process.hltPFTauDiscriminationByTrackFinding
-
-requireLeadTrack = cms.PSet(
-    BooleanOperator = cms.string("and"),
-    decayMode = cms.PSet(
-        Producer = cms.InputTag('hltPFTauDiscriminationByTrackFinding'),
-        cut = cms.double(0.5)
-    )
-)
-
-from RecoTauTag.RecoTau.PFRecoTauDiscriminationByIsolation_cfi import pfRecoTauDiscriminationByIsolation
-from RecoTauTag.RecoTau.TauDiscriminatorTools import noPrediscriminants
-process.hltPFTauBasicDiscriminators = pfRecoTauDiscriminationByIsolation.clone(
-    PFTauProducer = cms.InputTag(srcPFTaus),
-    particleFlowSrc = cms.InputTag('particleFlowTmp'),
-    vertexSrc = cms.InputTag(hlt_srcVertices),
-    ##Prediscriminants = requireDecayMode,
-    Prediscriminants = requireLeadTrack,
-    deltaBetaPUTrackPtCutOverride     = True, # Set the boolean = True to override.
-    deltaBetaPUTrackPtCutOverride_val = 0.5,  # Set the value for new value.
-    customOuterCone = 0.5,
-    isoConeSizeForDeltaBeta = 0.8,
-    deltaBetaFactor = "0.20",
-    qualityCuts = hltQualityCuts,
-    IDdefinitions = cms.VPSet(
-        cms.PSet(
-            IDname = cms.string("ChargedIsoPtSum"),
-            ApplyDiscriminationByTrackerIsolation = cms.bool(True),
-            storeRawSumPt = cms.bool(True)
-        ),
-        cms.PSet(
-            IDname = cms.string("NeutralIsoPtSum"),
-            ApplyDiscriminationByECALIsolation = cms.bool(True),
-            storeRawSumPt = cms.bool(True)
-        ),
-        cms.PSet(
-            IDname = cms.string("NeutralIsoPtSumWeight"),
-            ApplyDiscriminationByWeightedECALIsolation = cms.bool(True),
-            storeRawSumPt = cms.bool(True),
-            UseAllPFCandsForWeights = cms.bool(True)
-        ),
-        cms.PSet(
-            IDname = cms.string("TauFootprintCorrection"),
-            storeRawFootprintCorrection = cms.bool(True)
-        ),
-        cms.PSet(
-            IDname = cms.string("PhotonPtSumOutsideSignalCone"),
-            storeRawPhotonSumPt_outsideSignalCone = cms.bool(True)
-        ),
-        cms.PSet(
-            IDname = cms.string("PUcorrPtSum"),
-            applyDeltaBetaCorrection = cms.bool(True),
-            storeRawPUsumPt = cms.bool(True)
-        ),
-        cms.PSet(
-            IDname = cms.string("ByRawCombinedIsolationDBSumPtCorr3Hits"),
-            ApplyDiscriminationByTrackerIsolation = cms.bool(True),
-            ApplyDiscriminationByECALIsolation = cms.bool(True),
-            applyDeltaBetaCorrection = cms.bool(True),
-            storeRawSumPt = cms.bool(True)
+    requireDecayMode = cms.PSet(
+        BooleanOperator = cms.string("and"),
+        decayMode = cms.PSet(
+            Producer = cms.InputTag(srcPFTauDiscriminationByDecayModeFindingNewDMs),
+            cut = cms.double(0.5)
         )
     )
-)
-process.productionSequence += process.hltPFTauBasicDiscriminators
 
-def addPFTauTransverseImpactParametersForDeepTau():
+    addPFTauDiscriminator(process, "hlt%sBasicDiscriminators%s" % (pfTauLabel, suffix),
+        pfRecoTauDiscriminationByIsolation.clone(
+            PFTauProducer = cms.InputTag(srcPFTaus),
+            particleFlowSrc = cms.InputTag(srcPFCandidates),
+            vertexSrc = cms.InputTag(srcVertices),
+            Prediscriminants = requireDecayMode,
+            deltaBetaPUTrackPtCutOverride     = True, # Set the boolean = True to override.
+            deltaBetaPUTrackPtCutOverride_val = 0.5,  # Set the value for new value.
+            customOuterCone = 0.5,
+            isoConeSizeForDeltaBeta = 0.8,
+            deltaBetaFactor = "0.20",
+            qualityCuts = pftauQualityCuts,
+            IDdefinitions = cms.VPSet(
+                cms.PSet(
+                    IDname = cms.string("ChargedIsoPtSum"),
+                    ApplyDiscriminationByTrackerIsolation = cms.bool(True),
+                    storeRawSumPt = cms.bool(True)
+                ),
+                cms.PSet(
+                    IDname = cms.string("NeutralIsoPtSum"),
+                    ApplyDiscriminationByECALIsolation = cms.bool(True),
+                    storeRawSumPt = cms.bool(True)
+                ),
+                cms.PSet(
+                    IDname = cms.string("NeutralIsoPtSumWeight"),
+                    ApplyDiscriminationByWeightedECALIsolation = cms.bool(True),
+                    storeRawSumPt = cms.bool(True),
+                    UseAllPFCandsForWeights = cms.bool(True)
+                ),
+                cms.PSet(
+                    IDname = cms.string("TauFootprintCorrection"),
+                    storeRawFootprintCorrection = cms.bool(True)
+                ),
+                cms.PSet(
+                    IDname = cms.string("PhotonPtSumOutsideSignalCone"),
+                    storeRawPhotonSumPt_outsideSignalCone = cms.bool(True)
+                ),
+                cms.PSet(
+                    IDname = cms.string("PUcorrPtSum"),
+                    applyDeltaBetaCorrection = cms.bool(True),
+                    storeRawPUsumPt = cms.bool(True)
+                ),
+                cms.PSet(
+                    IDname = cms.string("ByRawCombinedIsolationDBSumPtCorr3Hits"),
+                    ApplyDiscriminationByTrackerIsolation = cms.bool(True),
+                    ApplyDiscriminationByECALIsolation = cms.bool(True),
+                    applyDeltaBetaCorrection = cms.bool(True),
+                    storeRawSumPt = cms.bool(True)
+                )
+            )
+        ),
+        pftauSequence)
 
-from RecoTauTag.RecoTau.PFTauPrimaryVertexProducer_cfi import PFTauPrimaryVertexProducer
-process.hltPFTauPrimaryVertexProducer = PFTauPrimaryVertexProducer.clone(
-    PFTauTag = cms.InputTag(srcPFTaus),
-    ElectronTag = cms.InputTag(""),
-    MuonTag = cms.InputTag(""),
-    PVTag = cms.InputTag(hlt_srcVertices),
-    beamSpot = cms.InputTag('offlineBeamSpot'),
-    Algorithm = cms.int32(0),
-    useBeamSpot = cms.bool(True),
-    RemoveMuonTracks = cms.bool(False),
-    RemoveElectronTracks = cms.bool(False),
-    useSelectedTaus = cms.bool(False),
-    discriminators = cms.VPSet(
-        cms.PSet(
-            discriminator = cms.InputTag('hltPFTauDecayModeFindingNewDMs'),
-            selectionCut = cms.double(0.5)
-        )
-    ),
-    cut = cms.string("pt > 18.0 & abs(eta) < 2.4")
-)
-process.productionSequence += process.hltPFTauPrimaryVertexProducer
+    return srcPFTauDiscriminationByDecayModeFindingNewDMs
 
-from RecoTauTag.RecoTau.PFTauSecondaryVertexProducer_cfi import PFTauSecondaryVertexProducer
-process.hltPFTauSecondaryVertexProducer = PFTauSecondaryVertexProducer.clone(
-    PFTauTag = cms.InputTag(srcPFTaus)
-)
-process.productionSequence += process.hltPFTauSecondaryVertexProducer
+def addPFTauTransverseImpactParametersForDeepTau(process, 
+                                                 srcPFTaus, srcPFTauDiscriminationByDecayModeFinding, srcVertices, srcBeamSpot, 
+                                                 pftauSequence, 
+                                                 pfTauLabel, suffix):
 
-from RecoTauTag.RecoTau.PFTauTransverseImpactParameters_cfi import PFTauTransverseImpactParameters
-process.hltPFTauTransverseImpactParameters = PFTauTransverseImpactParameters.clone(
-    PFTauTag = cms.InputTag(srcPFTaus),
-    PFTauPVATag = cms.InputTag('hltPFTauPrimaryVertexProducer'),
-    PFTauSVATag = cms.InputTag('hltPFTauSecondaryVertexProducer'),
-    useFullCalculation = cms.bool(True)
-)
-process.productionSequence += process.hltPFTauTransverseImpactParameters
+    hltPFTauPrimaryVertexProducer = PFTauPrimaryVertexProducer.clone(
+        PFTauTag = cms.InputTag(srcPFTaus),
+        ElectronTag = cms.InputTag(""),
+        MuonTag = cms.InputTag(""),
+        PVTag = cms.InputTag(srcVertices),
+        beamSpot = cms.InputTag(srcBeamSpot),
+        Algorithm = cms.int32(0),
+        useBeamSpot = cms.bool(True),
+        RemoveMuonTracks = cms.bool(False),
+        RemoveElectronTracks = cms.bool(False),
+        useSelectedTaus = cms.bool(False),
+        discriminators = cms.VPSet(
+            cms.PSet(
+                discriminator = cms.InputTag(srcPFTauDiscriminationByDecayModeFinding),
+                selectionCut = cms.double(0.5)
+            )
+        ),
+        cut = cms.string("pt > 20.0 & abs(eta) < 2.4") # CV: run vertex reconstruction only for taus passing pT and eta cuts in order not to waste computing time !!
+    )
+    setattr(process, "hlt%sPrimaryVertexProducer%s" % (pfTauLabel, suffix), hltPFTauPrimaryVertexProducer)
+    pftauSequence += hltPFTauPrimaryVertexProducer
+    srcPFTauPrimaryVertexProducer = hltPFTauPrimaryVertexProducer.label()
 
+    hltPFTauSecondaryVertexProducer = PFTauSecondaryVertexProducer.clone(
+        PFTauTag = cms.InputTag(srcPFTaus)
+    )
+    setattr(process, "hlt%sSecondaryVertexProducer%s" % (pfTauLabel, suffix), hltPFTauSecondaryVertexProducer)
+    pftauSequence += hltPFTauSecondaryVertexProducer
+    srcPFTauSecondaryVertexProducer = hltPFTauSecondaryVertexProducer.label()
+
+    hltPFTauTransverseImpactParameters = PFTauTransverseImpactParameters.clone(
+        PFTauTag = cms.InputTag(srcPFTaus),
+        PFTauPVATag = cms.InputTag(srcPFTauPrimaryVertexProducer),
+        PFTauSVATag = cms.InputTag(srcPFTauSecondaryVertexProducer),
+        useFullCalculation = cms.bool(True)
+    )
+    setattr(process, "hlt%sTransverseImpactParameters%s" % (pfTauLabel, suffix), hltPFTauTransverseImpactParameters)
+    pftauSequence += hltPFTauTransverseImpactParameters
 #----------------------------------------------------------------------------------------------------
 
-def addHLTPFTaus(process, algorithm, srcPFCandidates, srcVertices, 
+def addHLTPFTaus(process, algorithm, 
+                 srcPFCandidates, srcVertices, srcBeamSpot, 
                  isolation_maxDeltaZ, isolation_maxDeltaZToLeadTrack, isolation_minTrackHits, 
                  suffix = ""):
     pfTauLabel = None
@@ -247,9 +236,9 @@ def addHLTPFTaus(process, algorithm, srcPFCandidates, srcVertices,
         src = cms.InputTag(srcPFCandidates),
         srcPVs = cms.InputTag(srcVertices)
     )
-    srcPFTauAK4PFJets = "hlt%sAK4PFJets%s" % (pfTauLabel, suffix)
-    setattr(process, srcPFTauAK4PFJets, hltPFTauAK4PFJets)
+    setattr(process, "hlt%sAK4PFJets%s" % (pfTauLabel, suffix), hltPFTauAK4PFJets)
     pftauSequence += hltPFTauAK4PFJets
+    srcPFTauAK4PFJets = hltPFTauAK4PFJets.label()
 
     #------------------------------------------------------------------------------------------------
     ## CV: restrict PFTau reconstruction to genuine taus when debbugging,
@@ -260,9 +249,9 @@ def addHLTPFTaus(process, algorithm, srcPFCandidates, srcVertices,
     ##    stableOnly = cms.bool(True),
     ##    filter = cms.bool(False)
     ##) 
-    ##srcGenTaus = "genTausFor%s%s" % (pfTauLabel, suffix)
-    ##setattr(process, srcGenTaus,  genTaus)
+    ##setattr(process, "genTausFor%s%s" % (pfTauLabel, suffix), genTaus)
     ##pftauSequence += genTaus
+    ##srcGenTaus = genTaus.label()
     ##
     ##genMatchedAK4PFJets = cms.EDFilter("PFJetAntiOverlapSelector",
     ##  src = cms.InputTag(srcPFTauAK4PFJets),
@@ -271,10 +260,9 @@ def addHLTPFTaus(process, algorithm, srcPFCandidates, srcVertices,
     ##  invert = cms.bool(True),
     ##  filter = cms.bool(False)                                                          
     ##)
-    ##srcGenMatchedAK4PFJets = "genMatchedAK4PFJetsFor%s%s" % (pfTauLabel, suffix)
-    ##setattr(process, srcGenMatchedAK4PFJets, genMatchedAK4PFJets)
+    ##setattr(process, "genMatchedAK4PFJetsFor%s%s" % (pfTauLabel, suffix), genMatchedAK4PFJets)
     ##pftauSequence += genMatchedAK4PFJets
-    ##srcPFTauAK4PFJets = srcGenMatchedAK4PFJets
+    ##srcPFTauAK4PFJets = genMatchedAK4PFJets.label()
     #------------------------------------------------------------------------------------------------
 
     hltPFTau08Region = RecoTauJetRegionProducer.clone(
@@ -283,9 +271,9 @@ def addHLTPFTaus(process, algorithm, srcPFCandidates, srcVertices,
         minJetPt = cms.double(minSeedJetPt),
         maxJetAbsEta = cms.double(maxSeedJetAbsEta)
     )
-    srcPFTau08Region = "hlt%sPFJets08Region%s" % (pfTauLabel, suffix)
-    setattr(process, srcPFTau08Region, hltPFTau08Region)
+    setattr(process, "hlt%sPFJets08Region%s" % (pfTauLabel, suffix), hltPFTau08Region)
     pftauSequence += hltPFTau08Region
+    srcPFTau08Region = hltPFTau08Region.label()
 
     builders_chargedPFCandidates = builders.chargedPFCandidates.clone(
         qualityCuts = hltQualityCuts
@@ -308,9 +296,9 @@ def addHLTPFTaus(process, algorithm, srcPFCandidates, srcVertices,
             ranking_isChargedPFCandidate_withHGCalFix
         )
     )
-    srcPFTauPFJetsRecoTauChargedHadrons = "hlt%sPFJetsRecoTauChargedHadrons%s" % (pfTauLabel, suffix)
-    setattr(process, srcPFTauPFJetsRecoTauChargedHadrons, hltPFTauPFJetsRecoTauChargedHadrons)
+    setattr(process, "hlt%sPFJetsRecoTauChargedHadrons%s" % (pfTauLabel, suffix), hltPFTauPFJetsRecoTauChargedHadrons)
     pftauSequence += hltPFTauPFJetsRecoTauChargedHadrons
+    srcPFTauPFJetsRecoTauChargedHadrons = hltPFTauPFJetsRecoTauChargedHadrons.label()
 
     hltPFTauPiZeros = ak4PFJetsLegacyHPSPiZeros.clone(
         jetSrc = cms.InputTag(srcPFTauAK4PFJets),
@@ -318,9 +306,9 @@ def addHLTPFTaus(process, algorithm, srcPFCandidates, srcVertices,
         maxJetAbsEta = cms.double(maxSeedJetAbsEta)
     )
     hltPFTauPiZeros.builders[0].qualityCuts = hltQualityCuts
-    srcPFTauPiZeros = "hlt%sPiZeros%s" % (pfTauLabel, suffix)
-    setattr(process, srcPFTauPiZeros, hltPFTauPiZeros)
+    setattr(process, "hlt%sPiZeros%s" % (pfTauLabel, suffix), hltPFTauPiZeros)
     pftauSequence += hltPFTauPiZeros
+    srcPFTauPiZeros = hltPFTauPiZeros.label()
 
     srcPFTausTmp = None
     if algorithm == "shrinking-cone":
@@ -351,10 +339,9 @@ def addHLTPFTaus(process, algorithm, srcPFCandidates, srcVertices,
             )),
             modifiers = cms.VPSet()
         )
-        srcPFTausSansRef = "hlt%ssSansRef%s" % (pfTauLabel, suffix)
-        setattr(process, srcPFTausSansRef, hltPFTausSansRef)
+        setattr(process, "hlt%ssSansRef%s" % (pfTauLabel, suffix), hltPFTausSansRef)
         pftauSequence += hltPFTausSansRef
-        srcPFTausTmp = srcPFTausSansRef 
+        srcPFTausTmp = hltPFTausSansRef.label()
     elif algorithm == "hps":
         hltCombinatoricRecoTaus = combinatoricRecoTaus.clone(      
             jetSrc = cms.InputTag(srcPFTauAK4PFJets),
@@ -376,7 +363,7 @@ def addHLTPFTaus(process, algorithm, srcPFCandidates, srcVertices,
                     ##combinatoricDecayModeConfigs.config2prong0pi0,
                     ##combinatoricDecayModeConfigs.config2prong1pi0,
                     combinatoricDecayModeConfigs.config3prong0pi0,
-       	            ##combinatoricDecayModeConfigs.config3prong1pi0
+       	            combinatoricDecayModeConfigs.config3prong1pi0
                 ),
                 signalConeSize = cms.string(signalConeSize_hps),
                 minAbsPhotonSumPt_insideSignalCone = cms.double(2.5),
@@ -391,9 +378,9 @@ def addHLTPFTaus(process, algorithm, srcPFCandidates, srcVertices,
                 verbosity = cms.int32(0)
             ))
         )
-        srcCombinatoricRecoTaus = "hlt%sCombinatoricProducer%s" % (pfTauLabel, suffix)
-        setattr(process, srcCombinatoricRecoTaus, hltCombinatoricRecoTaus)
+        setattr(process, "hlt%sCombinatoricProducer%s" % (pfTauLabel, suffix), hltCombinatoricRecoTaus)
         pftauSequence += hltCombinatoricRecoTaus
+        srcCombinatoricRecoTaus = hltCombinatoricRecoTaus.label()
 
         hltPFTauSelectionDiscriminator = hpsSelectionDiscriminator.clone(
             PFTauProducer = cms.InputTag(srcCombinatoricRecoTaus),
@@ -417,15 +404,15 @@ def addHLTPFTaus(process, algorithm, srcPFCandidates, srcVertices,
                 decayMode_3Prong0Pi0.clone(
                     maxMass = cms.string("1.6")
                 ),
-                ##decayMode_3Prong1Pi0.clone(
-                ##    maxMass = cms.string("1.6")
-                ##)
+                decayMode_3Prong1Pi0.clone(
+                    maxMass = cms.string("1.6")
+                )
             ),
             requireTauChargedHadronsToBeChargedPFCands = cms.bool(True)
         )
-        srcPFTauSelectionDiscriminationByHPS = "hlt%sSelectionDiscriminationByHPS%s" % (pfTauLabel, suffix)
-        setattr(process, srcPFTauSelectionDiscriminationByHPS, hltPFTauSelectionDiscriminator)
+        setattr(process, "hlt%sSelectionDiscriminationByHPS%s" % (pfTauLabel, suffix), hltPFTauSelectionDiscriminator)
         pftauSequence += hltPFTauSelectionDiscriminator
+        srcPFTauSelectionDiscriminationByHPS = hltPFTauSelectionDiscriminator.label()
 
         cleaner_leadTrackPt = cms.PSet(
             name = cms.string("leadTrackPt"),
@@ -450,28 +437,18 @@ def addHLTPFTaus(process, algorithm, srcPFCandidates, srcVertices,
                 cleaners.chargeIsolation
             )
         )
-        srcPFTauCleaner = "hlt%sCleaner%s" % (pfTauLabel, suffix)
-        setattr(process, srcPFTauCleaner, hltPFTauCleaner)
+        setattr(process, "hlt%sCleaner%s" % (pfTauLabel, suffix), hltPFTauCleaner)
         pftauSequence += hltPFTauCleaner
-        srcPFTausTmp = srcPFTauCleaner
+        srcPFTausTmp = hltPFTauCleaner.label()
     else:
         raise ValueError("Invalid parameter algorithm = '%s' !!" % algorithm)
-
+    
     hltPFTaus = RecoTauPiZeroUnembedder.clone(
         src = cms.InputTag(srcPFTausTmp)
     )
-    srcPFTaus = "hlt%ss%s" % (pfTauLabel, suffix)
-    setattr(process, srcPFTaus, hltPFTaus)
+    setattr(process, "hlt%ss%s" % (pfTauLabel, suffix), hltPFTaus)
     pftauSequence += hltPFTaus
-
-    moduleName_dumpHLTPFTaus = "dumpHLT%ss%s" % (pfTauLabel, suffix)
-    module_dumpHLTPFTaus = cms.EDAnalyzer("DumpRecoPFTaus",
-        src = cms.InputTag(srcPFTaus),
-        src_sumChargedIso = cms.InputTag(''),
-        src_discriminators = cms.VInputTag()
-    )
-    setattr(process, moduleName_dumpHLTPFTaus, module_dumpHLTPFTaus)
-    pftauSequence += module_dumpHLTPFTaus
+    srcPFTaus = hltPFTaus.label()
 
     pftauDiscriminators = []
 
@@ -481,10 +458,8 @@ def addHLTPFTaus(process, algorithm, srcPFCandidates, srcVertices,
             UseOnlyChargedHadrons = cms.bool(True),
             MinPtLeadingObject = cms.double(0.0)
         ),
-        pftauDiscriminators, pftauSequence)
-    hltPFTausPassingTrackFinding = addPFTauSelector(process, "hlt%ssPassingTrackFinding%s" % (pfTauLabel, suffix), 
-        srcPFTaus,
-        pftauDiscriminators, pftauSequence)
+        pftauSequence)
+    pftauDiscriminators.append(hltPFTauDiscriminationByTrackFinding.label())
 
     hltPFTauDiscriminationByTrackPt = addPFTauDiscriminator(process, "hlt%sDiscriminationByTrackPt%s" % (pfTauLabel, suffix),
         pfRecoTauDiscriminationByLeadingObjectPtCut.clone(
@@ -492,23 +467,28 @@ def addHLTPFTaus(process, algorithm, srcPFCandidates, srcVertices,
             UseOnlyChargedHadrons = cms.bool(True),
             MinPtLeadingObject = cms.double(minLeadTrackPt)
         ),
-        pftauDiscriminators, pftauSequence)
-    hltPFTausPassingTrackPt = addPFTauSelector(process, "hlt%ssPassingTrackPt%s" % (pfTauLabel, suffix),
-        srcPFTaus,
-        pftauDiscriminators, pftauSequence)
+        pftauSequence)
+    pftauDiscriminators.append(hltPFTauDiscriminationByTrackPt.label())
        
     hltSelectedPFTaus = addPFTauSelector(process, "hltSelected%ss%s" % (pfTauLabel, suffix),
         srcPFTaus,
-        pftauDiscriminators, pftauSequence)
+        pftauDiscriminators, 
+        pftauSequence)
     srcSelectedPFTaus = hltSelectedPFTaus.label()
 
-    ##requireDecayMode = cms.PSet(
-    ##    BooleanOperator = cms.string("and"),
-    ##    decayMode = cms.PSet(
-    ##        Producer = cms.InputTag('hlt%sDiscriminationByTrackFinding%s' % (pfTauLabel, suffix)),
-    ##        cut = cms.double(0.5)
-    ##    )
-    ##)
+    addPFTauDiscriminator(process, "hlt%sDiscriminationByDecayModeFinding%s" % (pfTauLabel, suffix),
+        hpsSelectionDiscriminator.clone(
+            PFTauProducer = cms.InputTag(srcSelectedPFTaus),
+            decayModes = cms.VPSet(
+                decayMode_1Prong0Pi0,
+                decayMode_1Prong1Pi0,
+                decayMode_1Prong2Pi0,
+                decayMode_3Prong0Pi0
+            ),
+            requireTauChargedHadronsToBeChargedPFCands = cms.bool(True),
+            minPixelHits = cms.int32(1)
+        ),
+        pftauSequence)
 
     # CV: do not cut on charged isolation, but store charged isolation pT-sum in output file instead
     hltPFTauChargedIsoPtSum = addPFTauDiscriminator(process, "hltSelected%sChargedIsoPtSum%s" % (pfTauLabel, suffix),
@@ -518,7 +498,6 @@ def addHLTPFTaus(process, algorithm, srcPFCandidates, srcVertices,
             vertexSrc = cms.InputTag(srcVertices),
             qualityCuts = hltQualityCuts,
             Prediscriminants = noPrediscriminants,
-            ##Prediscriminants = requireDecayMode,
             ApplyDiscriminationByTrackerIsolation = cms.bool(True),
             ApplyDiscriminationByECALIsolation = cms.bool(False),
             ApplyDiscriminationByWeightedECALIsolation = cms.bool(False),
@@ -555,7 +534,7 @@ def addHLTPFTaus(process, algorithm, srcPFCandidates, srcVertices,
             UseAllPFCandsForWeights = cms.bool(False),
             verbosity = cms.int32(0)
         ),
-        pftauDiscriminators, pftauSequence)
+        pftauSequence)
 
     hltPFTauNeutralIsoPtSum = addPFTauDiscriminator(process, "hltSelected%sNeutralIsoPtSum%s" % (pfTauLabel, suffix),
         hltPFTauChargedIsoPtSum.clone(
@@ -563,16 +542,18 @@ def addHLTPFTaus(process, algorithm, srcPFCandidates, srcVertices,
             ApplyDiscriminationByECALIsolation = cms.bool(True),
             WeightECALIsolation = cms.double(1.)
         ),
-        pftauDiscriminators, pftauSequence)
+        pftauSequence)
 
-    moduleName_dumpSelectedHLTPFTaus = "dumpSelectedHLT%ss%s" % (pfTauLabel, suffix)
-    module_dumpSelectedHLTPFTaus = cms.EDAnalyzer("DumpRecoPFTaus",
-        src = cms.InputTag(srcSelectedPFTaus),
-        src_sumChargedIso = cms.InputTag('hltSelected%sChargedIsoPtSum%s' % (pfTauLabel, suffix)),
-        src_discriminators = cms.VInputTag()
-    )
-    setattr(process, moduleName_dumpSelectedHLTPFTaus, module_dumpSelectedHLTPFTaus)
-    pftauSequence += module_dumpSelectedHLTPFTaus
+    # CV: add additional tauID discriminators and tau lifetime information for DeepTau training
+    srcPFTauDiscriminationByDecayModeFindingNewDMs = addPFTauDiscriminatorsForDeepTau(process, 
+        srcSelectedPFTaus, srcPFCandidates, srcVertices, 
+        hltQualityCuts, 
+        pftauSequence,
+        pfTauLabel, suffix)
+    addPFTauTransverseImpactParametersForDeepTau(process, 
+        srcSelectedPFTaus, srcPFTauDiscriminationByDecayModeFindingNewDMs, srcVertices, srcBeamSpot, 
+        pftauSequence,
+        pfTauLabel, suffix)
 
     pftauSequenceName = "HLT%sSequence%s" % (pfTauLabel, suffix)
     setattr(process, pftauSequenceName, pftauSequence)
