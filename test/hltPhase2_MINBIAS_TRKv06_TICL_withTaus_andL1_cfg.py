@@ -29,12 +29,16 @@ vertices = "OfflineVertices"
 #vertices = "OnlineVerticesTrimmed"
 
 srcVertices = None
+srcBeamSpot = None
 if vertices == "OfflineVertices":
-    srcVertices = "offlinePrimaryVertices"
+    srcVertices = 'offlinePrimaryVertices'
+    srcBeamSpot = 'offlineBeamSpot'
 elif vertices == "OnlineVertices":
-    srcVertices = "hltPhase2PixelVertices"
+    srcVertices = 'hltPhase2PixelVertices'
+    srcBeamSpot = 'hltOnlineBeamSpot'
 elif vertices == "OnlineVerticesTrimmed":
-    srcVertices = "hltPhase2TrimmedPixelVertices"
+    srcVertices = 'hltPhase2TrimmedPixelVertices'
+    srcBeamSpot = 'hltOnlineBeamSpot'
 else:
     raise ValueError("Invalid configuration parameter vertices = '%s' !!" % vertices)
 
@@ -270,7 +274,8 @@ for algorithm in [ "hps", "shrinking-cone" ]:
       else:
         raise ValueError("Invalid parameter srcVertices = '%s' !!" % srcVertices)        
         
-      pftauSequence = addHLTPFTaus(process, algorithm, srcPFCandidates, srcVertices, 
+      pftauSequence = addHLTPFTaus(process, algorithm, 
+        srcPFCandidates, srcVertices, srcBeamSpot,
         isolation_maxDeltaZ, isolation_maxDeltaZToLeadTrack, isolation_minTrackHits, 
         suffix)
       process.taucustomreco += pftauSequence
