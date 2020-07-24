@@ -30,12 +30,16 @@ vertices = "OfflineVertices"
 #vertices = "OnlineVerticesTrimmed"
 
 srcVertices = None
+srcBeamSpot = None
 if vertices == "OfflineVertices":
-    srcVertices = "offlinePrimaryVertices"
+    srcVertices = 'offlinePrimaryVertices'
+    srcBeamSpot = 'offlineBeamSpot'
 elif vertices == "OnlineVertices":
-    srcVertices = "hltPhase2PixelVertices"
+    srcVertices = 'hltPhase2PixelVertices'
+    srcBeamSpot = 'hltOnlineBeamSpot'
 elif vertices == "OnlineVerticesTrimmed":
-    srcVertices = "hltPhase2TrimmedPixelVertices"
+    srcVertices = 'hltPhase2TrimmedPixelVertices'
+    srcBeamSpot = 'hltOnlineBeamSpot'
 else:
     raise ValueError("Invalid configuration parameter vertices = '%s' !!" % vertices)
 #--------------------------------------------------------------------------------
@@ -49,7 +53,12 @@ process.maxEvents = cms.untracked.PSet(
 process.source = cms.Source("PoolSource",
     #fileNames = cms.untracked.vstring('file:/hdfs/cms/store/mc/Phase2HLTTDRWinter20DIGI/QCD_Pt_120to170_TuneCP5_14TeV_pythia8/GEN-SIM-DIGI-RAW/PU200_110X_mcRun4_realistic_v3-v2/20000/EABECFB8-B05F-1F40-98A2-B174A99FD5C2.root')
     #fileNames = cms.untracked.vstring('file:/hdfs/cms/store/mc/Run3Winter20DRPremixMiniAOD/WJetsToLNu_TuneCP5_14TeV-amcatnloFXFX-pythia8/GEN-SIM-RAW/110X_mcRun3_2021_realistic_v6-v1/20000/778690DC-AB99-1849-9E7D-36FB30A546F7.root')
-    fileNames = cms.untracked.vstring('file:/hdfs/cms/store/mc/Phase2HLTTDRWinter20DIGI/QCD_Pt_50to80_TuneCP5_14TeV_pythia8/GEN-SIM-DIGI-RAW/PU200_110X_mcRun4_realistic_v3-v2/10000/FF49837E-DFAA-F247-B065-0D3A2FDCFD02.root')
+    #fileNames = cms.untracked.vstring('file:/hdfs/cms/store/mc/Phase2HLTTDRWinter20DIGI/QCD_Pt_50to80_TuneCP5_14TeV_pythia8/GEN-SIM-DIGI-RAW/PU200_110X_mcRun4_realistic_v3-v2/10000/FF49837E-DFAA-F247-B065-0D3A2FDCFD02.root')
+    fileNames = cms.untracked.vstring('file:/hdfs/cms/store/mc/Phase2HLTTDRWinter20DIGI/VBFHToTauTau_M125_14TeV_powheg_pythia8_correctedGridpack_tuneCP5/GEN-SIM-DIGI-RAW/PU200_110X_mcRun4_realistic_v3-v3/20000/FB3D0BCE-4788-AC49-A431-218B3E4C9B3A.root'),
+    ##eventsToProcess = cms.untracked.VEventRange(
+    ##    '1:2073:294225',
+    ##    '1:2073:294229'
+    ##)
 )
 
 process.options = cms.untracked.PSet(
@@ -214,7 +223,8 @@ for algorithm in [ "hps", "shrinking-cone" ]:
       else:
         raise ValueError("Invalid parameter srcVertices = '%s' !!" % srcVertices)        
         
-      pftauSequence = addHLTPFTaus(process, algorithm, srcPFCandidates, srcVertices, 
+      pftauSequence = addHLTPFTaus(process, algorithm, 
+        srcPFCandidates, srcVertices, srcBeamSpot, 
         isolation_maxDeltaZ, isolation_maxDeltaZToLeadTrack, isolation_minTrackHits, 
         suffix)
       process.taucustomreco += pftauSequence
@@ -229,8 +239,8 @@ process.hltKT6PFJets = kt6PFJets.clone(
 )
 process.reconstruction_step += process.hltKT6PFJets
 
-process.dumpEventContent = cms.EDAnalyzer('EventContentAnalyzer')
-process.reconstruction_step += process.dumpEventContent
+##process.dumpEventContent = cms.EDAnalyzer('EventContentAnalyzer')
+##process.reconstruction_step += process.dumpEventContent
 
 process.options = cms.untracked.PSet(
     wantSummary = cms.untracked.bool(True)
