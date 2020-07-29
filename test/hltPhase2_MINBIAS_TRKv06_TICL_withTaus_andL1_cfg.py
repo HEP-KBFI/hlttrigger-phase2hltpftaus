@@ -319,8 +319,8 @@ if runL1Emulator:
     process.reconstruction_step += process.l1emulatorSequence
 #--------------------------------------------------------------------------------
 
-process.dumpEventContent = cms.EDAnalyzer('EventContentAnalyzer')
-process.reconstruction_step += process.dumpEventContent
+##process.dumpEventContent = cms.EDAnalyzer('EventContentAnalyzer')
+##process.reconstruction_step += process.dumpEventContent
 
 process.options = cms.untracked.PSet(
     wantSummary = cms.untracked.bool(True)
