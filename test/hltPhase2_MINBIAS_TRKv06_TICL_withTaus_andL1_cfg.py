@@ -147,48 +147,51 @@ process.RECOoutput = cms.OutputModule("PoolOutputModule",
     ),
     outputCommands = cms.untracked.vstring(
         'drop *',
-        'keep *_ak4GenJets*_*_*',                     ## PRESENT ONLY IN RAW
-        'keep *_hltGtStage2Digis*_*_*',               ## PRESENT ONLY IN RAW
-        'keep *_hltTriggerSummaryRAW*_*_*',           ## PRESENT ONLY IN RAW
-        'keep *_ak4PFJetsCorrected*_*_*',             ## PRESENT ONLY IN MINIAOD/RECO
-        'keep *_hlt*Tau*_*_*',                        ## PRODUCED BY addHLTPFTaus FUNCTION BELOW
-        'keep *_particleFlowTmp_*_*',                 ## KEEP REFERENCE TO reco::PFCandidate COLLECTION GIVEN AS INPUT TO addHLTPFTaus FUNCTION
-        'keep *_muons1stStep_*_*',                    ## KEEP REFERENCE TO reco::PFCandidate COLLECTION GIVEN AS INPUT TO addHLTPFTaus FUNCTION
-        'keep *_electronGsfTracks_*_*',               ## KEEP REFERENCE TO reco::PFCandidate COLLECTION GIVEN AS INPUT TO addHLTPFTaus FUNCTION
-        'keep *_generalTracks_*_*',                   ## KEEP REFERENCE TO reco::PFCandidate COLLECTION GIVEN AS INPUT TO addHLTPFTaus FUNCTION
-        'keep *_offlinePrimaryVertices_*_*',          ## KEEP REFERENCE TO reco::PFCandidate COLLECTION GIVEN AS INPUT TO addHLTPFTaus FUNCTION
-        'keep *_hltPhase2PixelVertices_*_*',          ## PRODUCED BELOW
-        'keep *_hltPhase2TrimmedPixelVertices_*_*',   ## PRODUCED BELOW
-        'keep *_hltKT6PFJets_*_*',                    ## PRODUCED BELOW
-        'keep *_hltPFMET*_*_*',                       ## PRODUCED BELOW
-        'keep *_hltPuppiMET*_*_*',                    ## PRODUCED BELOW
-        'keep *_prunedGenParticles_*_*',              ## PRESENT ONLY IN MINIAOD/RECO
-        'keep *_ak4GenJets_*_*',                      ## PRESENT ONLY IN MINIAOD/RECO
-        'keep *_ak8GenJets_*_*',                      ## PRESENT ONLY IN MINIAOD/RECO
-        'keep *_slimmedGenJets__*',                   ## PRESENT ONLY IN MINIAOD/RECO
-        'keep *_slimmedTaus_*_*',                     ## PRESENT ONLY IN MINIAOD/RECO
-        'keep *_slimmedJets_*_*',                     ## PRESENT ONLY IN MINIAOD/RECO
-        'keep *_packedPFCandidates_*_*',              ## PRESENT ONLY IN MINIAOD/RECO
-        'keep *_slimmedAddPileupInfo_*_*',            ## PRESENT ONLY IN MINIAOD/RECO
-        'keep *_offlineSlimmedPrimaryVertices_*_*',   ## PRESENT ONLY IN MINIAOD/RECO
-        'keep *_generatorSmeared_*_*',                ## CV: ALLOWS TO PRODUCE FULL COLLECTION OF genParticles FOR DEBUGGING PURPOSES 
-        'keep *_generator_*_*',                       ## CV: NEEDED TO MAKE PTHAT PLOTS FOR QCD MULTIJET MC SAMPLES
-        'keep *_L1HPSPFTauProducer*PF_*_*',           ## ADDED BY L1 EMULATOR
-        'keep *_l1pfCandidates_PF_*',                 ## ADDED BY L1 EMULATOR
-        'keep *_l1pfProducer*_z0_*',                  ## ADDED BY L1 EMULATOR
-        'keep *_pfTracksFromL1Tracks*_*_*',           ## ADDED BY L1 EMULATOR
-        'keep *_pfClustersFrom*_*_*',                 ## ADDED BY L1 EMULATOR 
-        'keep *_TTTracksFromTracklet_*_*',            ## ADDED BY L1 EMULATOR
-        'keep *_VertexProducer_*_*',                  ## ADDED BY L1 EMULATOR
-        'keep *_ak4PFL1PF_*_*',                       ## ADDED BY L1 EMULATOR
-        'keep *_ak4PFL1PFCorrected_*_*',              ## ADDED BY L1 EMULATOR
-        'keep *_kt6L1PFJetsPF_rho_*',                 ## ADDED BY L1 EMULATOR
-        'keep *_kt6L1PFJetsNeutralsPF_rho_*',         ## ADDED BY L1 EMULATOR        
-        'keep *_l1pfCandidates_PF_*',                 ## ADDED BY L1 EMULATOR   
-        'keep *_l1pfCandidates_Puppi_*',              ## ADDED BY L1 EMULATOR   
-        'keep *_L1TkPrimaryVertex_*_*',               ## ADDED BY L1 EMULATOR
-        'keep *_L1HPSPFTauProducer*PF_*_*',           ## ADDED BY L1 EMULATOR
-        'keep *_L1HPSPFTauProducer*Puppi_*_*',        ## ADDED BY L1 EMULATOR
+        'keep *_ak4GenJets*_*_*',                   ## PRESENT ONLY IN RAW
+        'keep *_hltGtStage2Digis*_*_*',             ## PRESENT ONLY IN RAW
+        'keep *_hltTriggerSummaryRAW*_*_*',         ## PRESENT ONLY IN RAW
+        'keep *_ak4PFJetsCorrected*_*_*',           ## PRESENT ONLY IN MINIAOD/RECO
+        'keep *_hlt*Tau*_*_*',                      ## PRODUCED BY addHLTPFTaus FUNCTION BELOW
+        'keep *_particleFlowTmp_*_*',               ## KEEP REFERENCE TO reco::PFCandidate COLLECTION GIVEN AS INPUT TO addHLTPFTaus FUNCTION
+        'keep *_muons1stStep_*_*',                  ## KEEP REFERENCE TO reco::Track COLLECTIONS FOR ALL TYPES OF MUONS USED AS INPUT TO PARTICLE-FLOW ALGORITHM
+        'keep *_globalMuons_*_*',                   ## KEEP REFERENCE TO reco::Track COLLECTIONS FOR ALL TYPES OF MUONS USED AS INPUT TO PARTICLE-FLOW ALGORITHM
+        'keep *_standAloneMuons_*_*',               ## KEEP REFERENCE TO reco::Track COLLECTIONS FOR ALL TYPES OF MUONS USED AS INPUT TO PARTICLE-FLOW ALGORITHM
+        'keep *_tevMuons_*_*',                      ## KEEP REFERENCE TO reco::Track COLLECTIONS FOR ALL TYPES OF MUONS USED AS INPUT TO PARTICLE-FLOW ALGORITHM
+        'keep *_electronGsfTracks_*_*',             ## KEEP REFERENCE TO reco::GsfTrack COLLECTION FOR ELECTRONS USED AS INPUT TO PARTICLE-FLOW ALGORITHM
+        'keep *_generalTracks_*_*',                 ## KEEP REFERENCE TO reco::Track COLLECTION GIVEN AS INPUT TO addHLTPFTaus FUNCTION
+        'keep *_offlinePrimaryVertices_*_*',        ## KEEP REFERENCE TO reco::Vertex COLLECTION GIVEN AS INPUT TO addHLTPFTaus FUNCTION 
+        'keep *_hltPhase2PixelVertices_*_*',        ## PRODUCED BELOW
+        'keep *_hltPhase2TrimmedPixelVertices_*_*', ## PRODUCED BELOW
+        'keep *_hltKT6PFJets_*_*',                  ## PRODUCED BELOW
+        'keep *_hltPFMET*_*_*',                     ## PRODUCED BELOW
+        'keep *_hltPuppiMET*_*_*',                  ## PRODUCED BELOW
+        'keep *_prunedGenParticles_*_*',            ## PRESENT ONLY IN MINIAOD/RECO
+        'keep *_ak4GenJets_*_*',                    ## PRESENT ONLY IN MINIAOD/RECO
+        'keep *_ak8GenJets_*_*',                    ## PRESENT ONLY IN MINIAOD/RECO
+        'keep *_slimmedGenJets__*',                 ## PRESENT ONLY IN MINIAOD/RECO
+        'keep *_slimmedTaus_*_*',                   ## PRESENT ONLY IN MINIAOD/RECO
+        'keep *_slimmedJets_*_*',                   ## PRESENT ONLY IN MINIAOD/RECO
+        'keep *_packedPFCandidates_*_*',            ## PRESENT ONLY IN MINIAOD/RECO
+        'keep *_slimmedAddPileupInfo_*_*',          ## PRESENT ONLY IN MINIAOD/RECO
+        'keep *_offlineSlimmedPrimaryVertices_*_*', ## PRESENT ONLY IN MINIAOD/RECO
+        'keep *_generatorSmeared_*_*',              ## CV: ALLOWS TO PRODUCE FULL COLLECTION OF genParticles FOR DEBUGGING PURPOSES 
+        'keep *_generator_*_*',                     ## CV: NEEDED TO MAKE PTHAT PLOTS FOR QCD MULTIJET MC SAMPLES
+        'keep *_L1HPSPFTauProducer*PF_*_*',         ## ADDED BY L1 EMULATOR
+        'keep *_l1pfCandidates_PF_*',               ## ADDED BY L1 EMULATOR
+        'keep *_l1pfProducer*_z0_*',                ## ADDED BY L1 EMULATOR
+        'keep *_pfTracksFromL1Tracks*_*_*',         ## ADDED BY L1 EMULATOR
+        'keep *_pfClustersFrom*_*_*',               ## ADDED BY L1 EMULATOR 
+        'keep *_TTTracksFromTracklet_*_*',          ## ADDED BY L1 EMULATOR
+        'keep *_VertexProducer_*_*',                ## ADDED BY L1 EMULATOR
+        'keep *_ak4PFL1PF_*_*',                     ## ADDED BY L1 EMULATOR
+        'keep *_ak4PFL1PFCorrected_*_*',            ## ADDED BY L1 EMULATOR
+        'keep *_kt6L1PFJetsPF_rho_*',               ## ADDED BY L1 EMULATOR
+        'keep *_kt6L1PFJetsNeutralsPF_rho_*',       ## ADDED BY L1 EMULATOR        
+        'keep *_l1pfCandidates_PF_*',               ## ADDED BY L1 EMULATOR   
+        'keep *_l1pfCandidates_Puppi_*',            ## ADDED BY L1 EMULATOR   
+        'keep *_L1TkPrimaryVertex_*_*',             ## ADDED BY L1 EMULATOR
+        'keep *_L1HPSPFTauProducer*PF_*_*',         ## ADDED BY L1 EMULATOR
+        'keep *_L1HPSPFTauProducer*Puppi_*_*',      ## ADDED BY L1 EMULATOR
     )
 )
 
