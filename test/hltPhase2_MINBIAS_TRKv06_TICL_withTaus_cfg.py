@@ -138,6 +138,7 @@ process.RECOoutput = cms.OutputModule("PoolOutputModule",
         'keep *_slimmedJets_*_*',                   ## PRESENT ONLY IN MINIAOD/RECO
         'keep *_packedPFCandidates_*_*',            ## PRESENT ONLY IN MINIAOD/RECO
         'keep *_slimmedAddPileupInfo_*_*',          ## PRESENT ONLY IN MINIAOD/RECO
+        'keep *_addPileupInfo_*_*',                 ## PRESENT ONLY IN RAW
         'keep *_offlineSlimmedPrimaryVertices_*_*', ## PRESENT ONLY IN MINIAOD/RECO
         'keep *_generatorSmeared_*_*',              ## CV: ALLOWS TO PRODUCE FULL COLLECTION OF genParticles FOR DEBUGGING PURPOSES 
         'keep *_generator_*_*',                     ## CV: NEEDED TO MAKE PTHAT PLOTS FOR QCD MULTIJET MC SAMPLES
