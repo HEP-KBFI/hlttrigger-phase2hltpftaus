@@ -99,7 +99,7 @@ def addPFTauDiscriminatorsForDeepTau(process,
         )
     )
 
-    addPFTauDiscriminator(process, "hlt%sBasicDiscriminators%s" % (pfTauLabel, suffix),
+    hpsPFTauBasicDiscriminators = addPFTauDiscriminator(process, "hlt%sBasicDiscriminators%s" % (pfTauLabel, suffix),
         pfRecoTauDiscriminationByIsolation.clone(
             PFTauProducer = cms.InputTag(srcPFTaus),
             particleFlowSrc = cms.InputTag(srcPFCandidates),
@@ -149,6 +149,13 @@ def addPFTauDiscriminatorsForDeepTau(process,
                     storeRawSumPt = cms.bool(True)
                 )
             )
+        ),
+        pftauSequence)
+
+    hpsPFTauBasicDiscriminatorsdR03 = addPFTauDiscriminator(process, "hlt%sBasicDiscriminatorsdR03%s" % (pfTauLabel, suffix),
+        hpsPFTauBasicDiscriminators.clone(
+            customOuterCone = 0.3,
+            deltaBetaFactor = '0.0720' # 0.2*(0.3/0.5)^2
         ),
         pftauSequence)
 
@@ -491,7 +498,7 @@ def addHLTPFTaus(process, algorithm,
         pftauSequence)
 
     # CV: do not cut on charged isolation, but store charged isolation pT-sum in output file instead
-    hltPFTauChargedIsoPtSum = addPFTauDiscriminator(process, "hltSelected%sChargedIsoPtSum%s" % (pfTauLabel, suffix),
+    hltPFTauChargedIsoPtSumHGCalFix = addPFTauDiscriminator(process, "hltSelected%sChargedIsoPtSumHGCalFix%s" % (pfTauLabel, suffix),
         cms.EDProducer("PFRecoTauDiscriminationByIsolation",
             PFTauProducer = cms.InputTag(srcSelectedPFTaus),
             particleFlowSrc = cms.InputTag(srcPFCandidates),
@@ -526,7 +533,7 @@ def addHLTPFTaus(process, algorithm,
             deltaBetaPUTrackPtCutOverride = cms.bool(False),
             deltaBetaPUTrackPtCutOverride_val = cms.double(0.5),
             isoConeSizeForDeltaBeta = cms.double(isolationConeSize),
-            deltaBetaFactor = cms.string("0.38"),
+            deltaBetaFactor = cms.string("0.20"),
             applyRhoCorrection = cms.bool(False),
             rhoProducer = cms.InputTag("NotUsed"),
             rhoConeSize = cms.double(0.357),
@@ -536,11 +543,25 @@ def addHLTPFTaus(process, algorithm,
         ),
         pftauSequence)
 
-    hltPFTauNeutralIsoPtSum = addPFTauDiscriminator(process, "hltSelected%sNeutralIsoPtSum%s" % (pfTauLabel, suffix),
-        hltPFTauChargedIsoPtSum.clone(
+    hltPFTauChargedIsoPtSumdR03HGCalFix = addPFTauDiscriminator(process, "hltSelected%sChargedIsoPtSumdR03HGCalFix%s" % (pfTauLabel, suffix),
+        hltPFTauChargedIsoPtSumHGCalFix.clone(
+            customOuterCone = 0.3,
+            deltaBetaFactor = '0.0720' # 0.2*(0.3/0.5)^2
+        ),
+        pftauSequence)
+
+    hltPFTauNeutralIsoPtSumHGCalFix = addPFTauDiscriminator(process, "hltSelected%sNeutralIsoPtSumHGCalFix%s" % (pfTauLabel, suffix),
+        hltPFTauChargedIsoPtSumHGCalFix.clone(
             ApplyDiscriminationByTrackerIsolation = cms.bool(False),
             ApplyDiscriminationByECALIsolation = cms.bool(True),
             WeightECALIsolation = cms.double(1.)
+        ),
+        pftauSequence)
+
+    hltPFTauNeutralIsoPtSumdR03HGCalFix = addPFTauDiscriminator(process, "hltSelected%sNeutralIsoPtSumdR03HGCalFix%s" % (pfTauLabel, suffix),
+        hltPFTauNeutralIsoPtSumHGCalFix.clone(
+            customOuterCone = 0.3,
+            deltaBetaFactor = '0.0720' # 0.2*(0.3/0.5)^2
         ),
         pftauSequence)
 
